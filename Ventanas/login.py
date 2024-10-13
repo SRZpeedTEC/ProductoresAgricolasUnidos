@@ -3,7 +3,8 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
-from Ventanas import ventanaPrincipal
+from Ventanas import ventanaPrincipal, registro
+import tkinter.simpledialog as simpledialog
 from PIL import ImageTk, Image
 import time
 import sys
@@ -17,6 +18,7 @@ class Login:
         self.ventana.geometry('800x500')
         self.ventana.config(bg='#fcfcfc')
         self.ventana.resizable(width=0, height=0)
+        self.admin_password = "pau123"
         genericos.centrar_ventana(self.ventana, 800, 500)
         
         
@@ -53,6 +55,9 @@ class Login:
         inicio = Button(frame_form_fill,text="Iniciar sesion",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.verificar_datos)
         inicio.pack(fill=X, padx=20,pady=20)  
         
+        registrarse = Button(frame_form_fill,text="Registrar Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.ventanaRegistro)
+        registrarse.pack(fill=X, padx=20,pady=20) 
+        
         self.ventana.mainloop()
                   
         #end frame_form_fill
@@ -78,11 +83,28 @@ class Login:
             if credenciales_validas:
                 self.ventana.destroy()
                 ventanaPrincipal.VentanaPrincipal()
+                
             
             else:
                 messagebox.showerror("Error", "Credenciales invalidas")
                 
         except FileNotFoundError:
             messagebox.showerror("Error", "No se encontro el archivo de usuarios")
+            
+    def ventanaRegistro(self):
+        contrasena_admin = simpledialog.askstring("Contraseña de administrador",
+                                              "Ingrese la contraseña de administrador:",
+                                              show='*', parent=self.ventana)
+        if contrasena_admin == self.admin_password:
+            self.ventana.destroy()
+            registro.Registrar()
+        elif contrasena_admin is None:
+            # El usuario canceló el diálogo
+            messagebox.showerror("Error", "Contraseña de administrador requerida")
+        else:
+            messagebox.showerror("Error", "Contraseña de administrador incorrecta")
+        self.mostrar_mensaje("Contraseña de administrador incorrecta", "red")
+        
+        
             
         

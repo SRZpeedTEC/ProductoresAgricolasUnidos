@@ -3,13 +3,14 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
-from Ventanas import ventanaPrincipal
+from Ventanas import ventanaPrincipal, login
 from PIL import ImageTk, Image
 import time
 import sys
 from natsort import natsorted
+import os
 
-class Login:
+class Registrar:
     
     def __init__(self):
         self.ventana = Tk()
@@ -50,17 +51,41 @@ class Login:
         self.password.pack(fill=X, padx=20,pady=10)
         self.password.config(show="*")
 
-        inicio = Button(frame_form_fill,text="Crear Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.verificar_datos)
-        inicio.pack(fill=X, padx=20,pady=20)  
+        crear = Button(frame_form_fill,text="Crear Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.registrar_usuario)
+        crear.pack(fill=X, padx=20,pady=20)  
+        
+        inicio = Button(frame_form_fill,text="Iniciar Sesion",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.Ventana_Inicio)
+        inicio.pack(fill=X, padx=20,pady=20) 
         
         self.ventana.mainloop()
         
-        def registrar_usuario(self):
-            usuario_nuevo = self.usuario.get()
-            contrasena_nueva = self.password.get()
+    def registrar_usuario(self):
+        usuario_nuevo = self.usuario.get()
+        contrasena_nueva = self.password.get()
             
-            if not usuario_nuevo or not contrasena_nueva:
-                messagebox.showerror("Error", "Todos los campos son obligatorios")
-                return
+        if not usuario_nuevo or not contrasena_nueva:
+            messagebox.showerror("Error", "Todos los campos son obligatorios")
+            return
             
-            try
+        try:
+            if os.path.exists('./Resources/usuarios.txt'):
+                with open('./Resources/usuarios.txt', 'r', encoding='utf-8') as file:
+                    usuarios = file.readlines()
+                usuarios_existentes = [linea.strip().split(',', 1)[0] for linea in usuarios]
+                if usuario_nuevo in usuarios_existentes:
+                    messagebox.showerror("Error", "El usuario ya existe")
+                    return
+                
+            with open('./Resources/usuarios.txt', 'a', newline='') as archivo:
+                archivo.write(f"{usuario_nuevo},{contrasena_nueva}\n")
+            messagebox.showinfo("Success", "El usuario ha sido creado")
+            self.usuario.delete(0, END)
+            self.password.delete(0, END)
+        except Exception as e:
+            messagebox.showerror("Error", "Ha ocurrido un error al crear el usuario")
+        
+    def Ventana_Inicio(self):
+        self.ventana.destroy()
+        login.Login()
+        
+                
