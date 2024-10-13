@@ -13,7 +13,7 @@ class Login:
     
     def __init__(self):
         self.ventana = Tk()
-        self.ventana.title('Inicio de sesion')
+        self.ventana.title('Registro de Usuario')
         self.ventana.geometry('800x500')
         self.ventana.config(bg='#fcfcfc')
         self.ventana.resizable(width=0, height=0)
@@ -33,7 +33,7 @@ class Login:
         
         frame_form_title = Frame(frame_form, height=50, bd=0,  relief=SOLID, bg='black')
         frame_form_title.pack(side="top", fill=X)
-        titulo = Label(frame_form_title, text='Inicio de sesion', font=Font(family='Times', size=30), fg="#666a88", bg='white', pady=50)
+        titulo = Label(frame_form_title, text='Registrarse', font=Font(family='Times', size=30), fg="#666a88", bg='white', pady=50)
         titulo.pack(expand=YES, fill=BOTH)
         
         frame_form_fill = Frame(frame_form, height=50, bd=0,  relief=SOLID, bg='white')
@@ -50,39 +50,17 @@ class Login:
         self.password.pack(fill=X, padx=20,pady=10)
         self.password.config(show="*")
 
-        inicio = Button(frame_form_fill,text="Iniciar sesion",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.verificar_datos)
+        inicio = Button(frame_form_fill,text="Crear Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.verificar_datos)
         inicio.pack(fill=X, padx=20,pady=20)  
         
         self.ventana.mainloop()
-                  
-        #end frame_form_fill
         
-        
-    def verificar_datos(self):
-        usuario = self.usuario.get()
-        contrasena = self.password.get()
+        def registrar_usuario(self):
+            usuario_nuevo = self.usuario.get()
+            contrasena_nueva = self.password.get()
             
-        try: 
-            with open('./Resources/usuarios.txt', 'r') as archivo:
-                usuarios = archivo.readlines()
+            if not usuario_nuevo or not contrasena_nueva:
+                messagebox.showerror("Error", "Todos los campos son obligatorios")
+                return
             
-            # Eliminar caracteres de nueva linea y espacios
-            usuarios = [linea.strip() for linea in usuarios]
-            
-            credenciales_validas = False
-            for linea in usuarios:
-                usuario_archivo, contrasena_archivo = linea.split(',')
-                if usuario == usuario_archivo and contrasena == contrasena_archivo:
-                    credenciales_validas = True
-                    break
-            if credenciales_validas:
-                self.ventana.destroy()
-                ventanaPrincipal.VentanaPrincipal()
-            
-            else:
-                messagebox.showerror("Error", "Credenciales invalidas")
-                
-        except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontro el archivo de usuarios")
-            
-        
+            try
