@@ -1,0 +1,7 @@
+# Ignorar archivos de caché compilados
+__pycache__/
+*.py[cod]
+
+# Ignorar archivos de caché en directorios específicos
+**/__pycache__/
+**/*.py[cod]
