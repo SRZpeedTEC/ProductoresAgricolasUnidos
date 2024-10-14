@@ -58,8 +58,10 @@ class Procesar:
     def leer_lotes_procesados(self):
         # Leer el archivo de lotes procesados y devolver un conjunto de lotes ya procesados
         lotes_procesados = set()
-        if os.path.exists("lotes_procesados.txt"):
-            with open("lotes_procesados.txt", "r") as file:
+        # Cambiar la ruta a la nueva ubicación de los lotes procesados
+        path = "Resources/txt_lotes/lotes_procesados.txt"
+        if os.path.exists(path):
+            with open(path, "r") as file:
                 for line in file:
                     partes = line.strip().split(':')
                     if len(partes) > 0:
@@ -69,8 +71,9 @@ class Procesar:
     def actualizar_lotes_disponibles(self):
         # Leer el archivo de lotes y llenar el combobox con solo el identificador del lote
         lotes = []
-        if os.path.exists("lotes.txt"):
-            with open("lotes.txt", "r") as file:
+        path = "Resources/txt_lotes/lotes.txt"  # Cambiar esta ruta si también moviste el archivo de lotes
+        if os.path.exists(path):
+            with open(path, "r") as file:
                 for line in file:
                     if line.strip():
                         partes = line.strip().split(',')
@@ -114,7 +117,7 @@ class Procesar:
 
             # Añadir el lote confirmado a la lista de lotes procesados y registrarlo en el archivo
             self.lotes_procesados.add(self.lote_confirmado)
-            with open("lotes_procesados.txt", "a") as file:
+            with open("Resources/txt_lotes/lotes_procesados.txt", "a") as file:  # Actualizar la ruta
                 file.write(f"{self.lote_confirmado}: {self.resultado_procesamiento}\n")
 
             # Actualizar la lista de lotes disponibles

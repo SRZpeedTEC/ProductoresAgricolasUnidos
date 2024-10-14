@@ -56,7 +56,7 @@ class VentanaPrincipalFabricante:
     def mostrar_logo(self):
         # Mostrar el logo en el content frame
         self.limpiar_frame_contenido()
-        logo = gnr.leer_imagen("./Resources/logoProvisional.png", (150, 150))
+        logo = gnr.leer_imagen("./Resources/Imgs/logoProvisional.png", (150, 150))
         lblLogo = Label(self.content_frame, image=logo, bg="#B6FFA1")
         lblLogo.image = logo  # Guardar una referencia para evitar que la imagen se borre
         lblLogo.pack(expand=True)
@@ -88,8 +88,8 @@ class VentanaPrincipalFabricante:
             tree.column(col, width=150, anchor=CENTER)
 
         # Leer el archivo de lotes procesados y llenar el Treeview
-        if os.path.exists("lotes_procesados.txt"):
-            with open("lotes_procesados.txt", "r") as file:
+        if os.path.exists("Resources/txt_lotes/lotes_procesados.txt"):
+            with open("Resources/txt_lotes/lotes_procesados.txt", "r") as file:
                 for line in file:
                     if line.strip():
                         partes = line.strip().split(':', 1)
@@ -125,5 +125,5 @@ class VentanaPrincipalFabricante:
     def volver_login(self):
         # Volver a la pantalla de login
         self.ventana.destroy()
-        from Ventanas.login import Login  # Importación diferida para evitar el problema de importación circular
+        from Ventanas.Login.registro.login import Login  # Importación diferida para evitar el problema de importación circular
         Login()

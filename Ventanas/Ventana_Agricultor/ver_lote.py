@@ -11,7 +11,7 @@ def mostrar_ver_lote(content_frame):
     lote_tree = crear_lote_treeview(content_frame)
 
     try:
-        with open("lotes.txt", "r") as file:
+        with open("Resources\\txt_lotes\\lotes.txt", "r") as file:
             lotes = file.readlines()
             lotes = natsorted(lotes, key=lambda x: (x.split(',')[0], x.split(',')[2]))
             for lote in lotes:

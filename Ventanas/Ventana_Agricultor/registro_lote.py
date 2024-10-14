@@ -42,7 +42,7 @@ def mostrar_registro_lote(content_frame):
         # Buscar en el archivo para obtener el número del siguiente lote
         contador = 1
         try:
-            with open("lotes.txt", "r") as file:
+            with open("Resources\\txt_lotes\\lotes.txt", "r") as file:
                 lotes = file.readlines()
                 for lote in lotes:
                     _, _, lote_fecha, lote_id = lote.strip().split(',')
@@ -81,7 +81,7 @@ def registrar_lote(combo_tipo_producto, entry_cantidad, cal, lote_entry):
         messagebox.showerror("Error", "La cantidad debe ser un número positivo.")
         return
 
-    with open("lotes.txt", "a") as file:
+    with open("Resources\\txt_lotes\\lotes.txt", "a") as file:
         file.write(f"{tipo_producto},{cantidad},{fecha},{lote}\n")
 
     messagebox.showinfo("Registro Exitoso", f"Lote de {tipo_producto} registrado exitosamente.")

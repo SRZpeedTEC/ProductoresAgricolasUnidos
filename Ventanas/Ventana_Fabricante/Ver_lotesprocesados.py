@@ -34,8 +34,8 @@ class VerLotesProcesados:
 
     def cargar_lotes_procesados(self, tree):
         # Leer los lotes procesados del archivo y mostrarlos en el Treeview
-        if os.path.exists("lotes_procesados.txt"):
-            with open("lotes_procesados.txt", "r") as file:
+        if os.path.exists("Resources/txt_lotes/lotes_procesados.txt"):
+            with open("Resources/txt_lotes/lotes_procesados.txt", "r") as file:
                 for line in file:
                     if line.strip():
                         partes = line.strip().split(':', 1)

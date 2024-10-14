@@ -11,7 +11,7 @@ def mostrar_editar_lote(content_frame):
     lote_tree = crear_lote_treeview(content_frame)
 
     try:
-        with open("lotes.txt", "r") as file:
+        with open("Resources\\txt_lotes\\lotes.txt", "r") as file:
             lotes = file.readlines()
             lotes = natsorted(lotes, key=lambda x: (x.split(',')[0], x.split(',')[2]))  # Ordenar por tipo y fecha
             for lote in lotes:
@@ -69,10 +69,10 @@ def guardar_cambios(lote_tree, tipo_var, cantidad_var, fecha_var, lote_var):
     lote_tree.item(selected_item, values=(tipo_producto, cantidad, fecha, lote_id))
 
     try:
-        with open("lotes.txt", "r") as file:
+        with open("Resources\\txt_lotes\\lotes.txt", "r") as file:
             lotes = file.readlines()
 
-        with open("lotes.txt", "w") as file:
+        with open("Resources\\txt_lotes\\lotes.txt", "w") as file:
             for lote in lotes:
                 data = lote.strip().split(',')
                 if data[3] == lote_id:
