@@ -3,8 +3,11 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
-from Ventanas import VentanaPrincipalAgricultor, VentanaPrincipalFabricante, registro
+from Ventanas.Login.registro import registro
 from PIL import ImageTk, Image
+
+from Ventanas.Ventana_Agricultor import VentanaPrincipalAgricultor
+from Ventanas.Ventana_Fabricante import VentanaPrincipalFabricante
 
 class Login:
 
@@ -17,7 +20,7 @@ class Login:
         genericos.centrar_ventana(self.ventana, 700, 500)
 
         # Cargar logo
-        logo = genericos.leer_imagen("./Resources/logoProvisional.png", (200, 200))
+        logo = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (200, 200))
         frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#A0D683')
         frame_logo.pack(side="left", fill=BOTH)
         lbllogo = Label(frame_logo, image=logo, bg='#A0D683')

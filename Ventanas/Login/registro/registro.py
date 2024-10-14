@@ -4,7 +4,7 @@ from tkinter.font import Font
 from tkinter.font import BOLD
 from tkinter import ttk
 import Utiles.Genericos as genericos
-from Ventanas import login
+from Ventanas.Login.registro import login
 from PIL import ImageTk, Image
 import os
 
@@ -19,8 +19,13 @@ class Registrar:
         genericos.centrar_ventana(self.ventana, 900, 500)
 
         # Cargar logo
+<<<<<<< Updated upstream:Ventanas/registro.py
         logo = genericos.leer_imagen("./Resources/logoProvisional.png", (200, 200))
         frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#A0D683')
+=======
+        logo = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))
+        frame_logo = Frame(self.ventana, bd=0, width=150, relief=SOLID, padx=10, pady=10, bg='#A0D683')
+>>>>>>> Stashed changes:Ventanas/Login/registro/registro.py
         frame_logo.pack(side="left", expand=NO, fill=BOTH)
         lbllogo = Label(frame_logo, image=logo, bg='#A0D683')
         lbllogo.place(x=0, y=0, relwidth=1, relheight=1)

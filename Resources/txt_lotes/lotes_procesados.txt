@@ -1,0 +1,4 @@
+P20241012_01: Pequeños Verdes: 49 kg, Pequeños Maduros: 15 kg, Grandes Verdes: 46 kg, Grandes Maduros: 11 kg, Dañados: 30 kg
+P20241001_01: Pequeños Verdes: 43 kg, Pequeños Maduros: 15 kg, Grandes Verdes: 12 kg, Grandes Maduros: 43 kg, Dañados: 29 kg
+P20241012_02: Pequeños Verdes: 37 kg, Pequeños Maduros: 39 kg, Grandes Verdes: 32 kg, Grandes Maduros: 33 kg, Dañados: 21 kg
+P20241013_01: Pequeños Verdes: 24 kg, Pequeños Maduros: 49 kg, Grandes Verdes: 45 kg, Grandes Maduros: 42 kg, Dañados: 39 kg
