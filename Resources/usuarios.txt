@@ -1,4 +1,6 @@
 santi,123,Agricultor
 kevin,321,Fabricante
 Jose,123,Fabricante
-kembly,2907,Agricultor
+kembly,2907,Agriculto
+Agricultor,111,Agricultor
+Fabricante,111,Fabricante

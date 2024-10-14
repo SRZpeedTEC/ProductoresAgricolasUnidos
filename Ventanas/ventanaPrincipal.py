@@ -25,6 +25,7 @@ class VentanaPrincipal:
         logo = gnr.leer_imagen("./Resources/logoProvisional.png", (200, 200))
         lblLogo = Label(self.ventana, image=logo, bg="#B6FFA1")
         lblLogo.place(x=0, y=0, relwidth=1, relheight=1)
+        lblLogo.image = logo  # Necesario para que la imagen no sea recolectada por el garbage collector
 
         # Crear botones de navegación
         self.crear_botones()
@@ -37,14 +38,15 @@ class VentanaPrincipal:
         frame_botones.place(relx=0.5, rely=0.5, anchor=CENTER)
 
         # Botón para registrar lotes
-        btn_registrar_lote = Button(frame_botones, text="Registro de Lotes", command=lambda: formulario.crear_formulario(),bg="#B6FFA1", font=("Arial", 12), width=20)
+        btn_registrar_lote = Button(frame_botones, text="Registro de Lotes", command=lambda: formulario.crear_formulario(), bg="#B6FFA1", font=("Arial", 12), width=20)
         btn_registrar_lote.grid(row=0, column=0, padx=10, pady=10)
 
-        # Botón para monitorear inventarios
-        btn_registrar_lote = Button(frame_botones, text="Editar Lote", command=lambda: editar_lote.editar_lote(self),bg="#B6FFA1", font=("Arial", 12), width=20)
-        btn_registrar_lote.grid(row=1, column=0, padx=10, pady=10)
+        # Botón para editar lote
+        btn_editar_lote = Button(frame_botones, text="Editar Lote", command=lambda: editar_lote.editar_lote(self), bg="#B6FFA1", font=("Arial", 12), width=20)
+        btn_editar_lote.grid(row=1, column=0, padx=10, pady=10)
 
-        btn_ver_lote = Button(frame_botones, text="Ver Lote", command=lambda: ver_lote.ver_lote(self),bg="#B6FFA1", font=("Arial", 12), width=20)
+        # Botón para ver lote
+        btn_ver_lote = Button(frame_botones, text="Ver Lote", command=lambda: ver_lote.ver_lote(self), bg="#B6FFA1", font=("Arial", 12), width=20)
         btn_ver_lote.grid(row=2, column=0, padx=10, pady=10)
 
 if __name__ == "__main__":
