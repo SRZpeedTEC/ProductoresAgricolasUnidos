@@ -32,4 +32,10 @@ class VentanaPrincipalFabricante:
         btn_procesar = Button(frame_botones, text="Procesar", command=Procesar.Procesar, bg="#B6FFA1", font=("Arial", 12), width=20)
         btn_procesar.grid(row=0, column=0, padx=10, pady=10)
 
+        btn_volver_login = Button(frame_botones, text="Volver al Login", command=self.volver_login, bg="#B6FFA1", font=("Arial", 12), width=20)
+        btn_volver_login.grid(row=1, column=0, padx=10, pady=10)
 
+    def volver_login(self):
+        self.ventana.destroy()
+        from Ventanas.login import Login  # Importación diferida para evitar el problema de importación circular
+        Login()

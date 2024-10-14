@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
-from tkinter.font import Font
-from tkinter.font import BOLD
+from tkinter.font import Font, BOLD
 from tkinter import ttk
 import Utiles.Genericos as genericos
 from Ventanas import login
@@ -13,58 +12,56 @@ class Registrar:
     def __init__(self):
         self.ventana = Tk()
         self.ventana.title('Registro de Usuario')
-        self.ventana.geometry('900x500')
+        self.ventana.geometry('450x350')
         self.ventana.config(bg='#fcfcfc')
         self.ventana.resizable(width=0, height=0)
-        genericos.centrar_ventana(self.ventana, 900, 500)
+        genericos.centrar_ventana(self.ventana, 450, 350)
 
         # Cargar logo
-        logo = genericos.leer_imagen("./Resources/logoProvisional.png", (200, 200))
-        frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#A0D683')
+        logo = genericos.leer_imagen("./Resources/logoProvisional.png", (100, 100))
+        frame_logo = Frame(self.ventana, bd=0, width=150, relief=SOLID, padx=10, pady=10, bg='#A0D683')
         frame_logo.pack(side="left", expand=NO, fill=BOTH)
         lbllogo = Label(frame_logo, image=logo, bg='#A0D683')
         lbllogo.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Frame derecho para el formulario
         frame_form = Frame(self.ventana, bd=0, relief=SOLID, bg='white')
-        frame_form.pack(side="right", expand=YES, fill=BOTH, padx=20, pady=20)
+        frame_form.pack(side="right", expand=YES, fill=BOTH, padx=10, pady=10)
 
         # Título del formulario
-        frame_form_title = Frame(frame_form, height=50, bd=0, relief=SOLID, bg='white')
-        frame_form_title.pack(side="top", fill=X)
-        titulo = Label(frame_form_title, text='Registrarse', font=Font(family='Times', size=30), fg="#666a88", bg='white', pady=10)
-        titulo.pack(expand=YES, fill=BOTH)
+        titulo = Label(frame_form, text='Registro de Usuario', font=Font(family='Arial', size=18, weight=BOLD), fg="#666a88", bg='white')
+        titulo.pack(pady=(5, 15))
 
         # Formulario de registro
-        frame_form_fill = Frame(frame_form, height=50, bd=0, relief=SOLID, bg='white')
-        frame_form_fill.pack(side="bottom", expand=YES, fill=BOTH)
+        etiqueta_usuario = Label(frame_form, text="Usuario", font=('Arial', 12), fg="#666a88", bg='white', anchor="w")
+        etiqueta_usuario.pack(fill=X, padx=10, pady=5)
+        self.usuario = Entry(frame_form, font=('Arial', 12))
+        self.usuario.pack(fill=X, padx=10, pady=5)
 
-        etiqueta_usuario = Label(frame_form_fill, text="Usuario", font=('Times', 14), fg="#666a88", bg='white', anchor="w")
-        etiqueta_usuario.pack(fill=X, padx=20, pady=5)
-        self.usuario = Entry(frame_form_fill, font=('Times', 14))
-        self.usuario.pack(fill=X, padx=20, pady=5)
-
-        etiqueta_password = Label(frame_form_fill, text="Contraseña", font=('Times', 14), fg="#666a88", bg='white', anchor="w")
-        etiqueta_password.pack(fill=X, padx=20, pady=5)
-        self.password = Entry(frame_form_fill, font=('Times', 14))
-        self.password.pack(fill=X, padx=20, pady=5)
+        etiqueta_password = Label(frame_form, text="Contraseña", font=('Arial', 12), fg="#666a88", bg='white', anchor="w")
+        etiqueta_password.pack(fill=X, padx=10, pady=5)
+        self.password = Entry(frame_form, font=('Arial', 12))
+        self.password.pack(fill=X, padx=10, pady=5)
         self.password.config(show="*")
 
-        etiqueta_rol = Label(frame_form_fill, text="Rol", font=('Times', 14), fg="#666a88", bg='white', anchor="w")
-        etiqueta_rol.pack(fill=X, padx=20, pady=5)
-        self.rol = ttk.Combobox(frame_form_fill, values=["Agricultor", "Fabricante"], state="readonly", font=('Times', 14))
-        self.rol.pack(fill=X, padx=20, pady=5)
+        etiqueta_rol = Label(frame_form, text="Rol", font=('Arial', 12), fg="#666a88", bg='white', anchor="w")
+        etiqueta_rol.pack(fill=X, padx=10, pady=5)
+        self.rol = ttk.Combobox(frame_form, values=["Agricultor", "Fabricante"], state="readonly", font=('Arial', 12))
+        self.rol.pack(fill=X, padx=10, pady=5)
         self.rol.set("Seleccione su rol")  # Placeholder para la lista desplegable
 
         # Botones
-        frame_botones = Frame(frame_form_fill, bd=0, relief=SOLID, bg='white')
-        frame_botones.pack(fill=X, padx=20, pady=20)
+        frame_botones = Frame(frame_form, bd=0, relief=SOLID, bg='white')
+        frame_botones.pack(pady=15)
 
-        crear = Button(frame_botones, text="Crear Usuario", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.registrar_usuario)
-        crear.grid(row=0, column=0, padx=5, pady=10)
+        crear = Button(frame_botones, text="Crear Usuario", font=('Arial', 12, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.registrar_usuario)
+        crear.grid(row=0, column=0, padx=10)
 
-        volver_login = Button(frame_botones, text="Volver al Login", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.volver_al_login)
-        volver_login.grid(row=0, column=1, padx=5, pady=10)
+        volver_login = Button(frame_botones, text="Volver al Login", font=('Arial', 12, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.volver_al_login)
+        volver_login.grid(row=0, column=1, padx=10)
+
+        cerrar = Button(frame_botones, text="Cerrar", font=('Arial', 12, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.ventana.quit)
+        cerrar.grid(row=0, column=2, padx=10)
 
         self.ventana.mainloop()
 
