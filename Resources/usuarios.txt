@@ -1,11 +1,8 @@
 Agricultor,1234
-<<<<<<< Updated upstream
-Productor,5678
-=======
 Productor,5678
 nuevo,4321
 Agricultor2,1313
 hola,123
 prueba,321
-Jose,123
->>>>>>> Stashed changes
+santi,123,Agricultor
+kevin,321,Fabricante
