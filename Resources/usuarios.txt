@@ -4,3 +4,5 @@ nuevo,4321
 Agricultor2,1313
 hola,123
 prueba,321
+santi,123,Agricultor
+kevin,321,Fabricante

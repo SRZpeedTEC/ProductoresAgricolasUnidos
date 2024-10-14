@@ -4,24 +4,12 @@ from tkinter.font import Font
 from tkinter.font import BOLD
 from tkinter import ttk
 import Utiles.Genericos as genericos
-<<<<<<< Updated upstream
-from Ventanas import ventanaPrincipal, login
-from PIL import ImageTk, Image
-import time
-import sys
-from natsort import natsorted
-import os
-
-class Registrar:
-    
-=======
 from Ventanas import login
 from PIL import ImageTk, Image
 import os
 
 class Registrar:
 
->>>>>>> Stashed changes
     def __init__(self):
         self.ventana = Tk()
         self.ventana.title('Registro de Usuario')
@@ -62,28 +50,6 @@ class Registrar:
         self.password.pack(fill=X, padx=20, pady=5)
         self.password.config(show="*")
 
-<<<<<<< Updated upstream
-        crear = Button(frame_form_fill,text="Crear Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.registrar_usuario)
-        crear.pack(fill=X, padx=20,pady=20)  
-        
-        inicio = Button(frame_form_fill,text="Iniciar Sesion",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.Ventana_Inicio)
-        inicio.pack(fill=X, padx=20,pady=20) 
-        
-        self.ventana.mainloop()
-        
-    def registrar_usuario(self):
-        usuario_nuevo = self.usuario.get()
-        contrasena_nueva = self.password.get()
-            
-        if not usuario_nuevo or not contrasena_nueva:
-            messagebox.showerror("Error", "Todos los campos son obligatorios")
-            return
-            
-        try:
-            if os.path.exists('./Resources/usuarios.txt'):
-                with open('./Resources/usuarios.txt', 'r', encoding='utf-8') as file:
-                    usuarios = file.readlines()
-=======
         etiqueta_rol = Label(frame_form_fill, text="Rol", font=('Times', 14), fg="#666a88", bg='white', anchor="w")
         etiqueta_rol.pack(fill=X, padx=20, pady=5)
         self.rol = ttk.Combobox(frame_form_fill, values=["Agricultor", "Fabricante"], state="readonly", font=('Times', 14))
@@ -118,27 +84,10 @@ class Registrar:
                     usuarios = file.readlines()
 
                 # Verificar si el usuario ya existe
->>>>>>> Stashed changes
                 usuarios_existentes = [linea.strip().split(',', 1)[0] for linea in usuarios]
                 if usuario_nuevo in usuarios_existentes:
                     messagebox.showerror("Error", "El usuario ya existe")
                     return
-<<<<<<< Updated upstream
-                
-            with open('./Resources/usuarios.txt', 'a', newline='') as archivo:
-                archivo.write(f"{usuario_nuevo},{contrasena_nueva}\n")
-            messagebox.showinfo("Success", "El usuario ha sido creado")
-            self.usuario.delete(0, END)
-            self.password.delete(0, END)
-        except Exception as e:
-            messagebox.showerror("Error", "Ha ocurrido un error al crear el usuario")
-        
-    def Ventana_Inicio(self):
-        self.ventana.destroy()
-        login.Login()
-        
-                
-=======
 
             # Agregar el nuevo usuario al archivo
             with open('./Resources/usuarios.txt', 'a', encoding='utf-8', newline='') as archivo:
@@ -156,4 +105,3 @@ class Registrar:
     def volver_al_login(self):
         self.ventana.destroy()
         login.Login()
->>>>>>> Stashed changes

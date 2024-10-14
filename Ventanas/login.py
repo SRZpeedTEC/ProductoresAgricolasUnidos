@@ -3,12 +3,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
-<<<<<<< Updated upstream
-from Ventanas import ventanaPrincipal, registro
-import tkinter.simpledialog as simpledialog
-=======
 from Ventanas import VentanaPrincipalAgricultor, VentanaPrincipalFabricante, registro
->>>>>>> Stashed changes
 from PIL import ImageTk, Image
 
 class Login:
@@ -19,16 +14,9 @@ class Login:
         self.ventana.geometry('700x500')
         self.ventana.config(bg='#fcfcfc')
         self.ventana.resizable(width=0, height=0)
-<<<<<<< Updated upstream
-        self.admin_password = "pau123"
-        genericos.centrar_ventana(self.ventana, 800, 500)
-        
-        
-=======
         genericos.centrar_ventana(self.ventana, 700, 500)
 
         # Cargar logo
->>>>>>> Stashed changes
         logo = genericos.leer_imagen("./Resources/logoProvisional.png", (200, 200))
         frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#A0D683')
         frame_logo.pack(side="left", fill=BOTH)
@@ -60,14 +48,6 @@ class Login:
         self.password.pack(fill=X, padx=20, pady=10)
         self.password.config(show="*")
 
-<<<<<<< Updated upstream
-        inicio = Button(frame_form_fill,text="Iniciar sesion",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.verificar_datos)
-        inicio.pack(fill=X, padx=20,pady=20)  
-        
-        registrarse = Button(frame_form_fill,text="Registrar Usuario",font=('Times', 15, BOLD),bg='#A0D683', bd=0,fg="#fff", command=self.ventanaRegistro)
-        registrarse.pack(fill=X, padx=20,pady=20) 
-        
-=======
         # Botón de inicio de sesión
         inicio = Button(frame_form_fill, text="Iniciar sesión", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.verificar_datos)
         inicio.pack(fill=X, padx=20, pady=10)
@@ -76,7 +56,6 @@ class Login:
         registrarse = Button(frame_form_fill, text="Registrar Usuario", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.ventana_registro)
         registrarse.pack(fill=X, padx=20, pady=10)
 
->>>>>>> Stashed changes
         self.ventana.mainloop()
 
     def verificar_datos(self):
@@ -104,45 +83,17 @@ class Login:
 
             if credenciales_validas:
                 self.ventana.destroy()
-<<<<<<< Updated upstream
-                ventanaPrincipal.VentanaPrincipal()
-                
-            
-=======
                 # Determinar si abrir Ventana de Productor o Fabricante según el rol almacenado
                 if rol == "Fabricante":
                     VentanaPrincipalFabricante.VentanaPrincipalFabricante()
                 elif rol == "Agricultor":
                     VentanaPrincipalAgricultor.VentanaPrincipalAgricultor()
->>>>>>> Stashed changes
             else:
                 messagebox.showerror("Error", "Credenciales inválidas")
 
         except FileNotFoundError:
-<<<<<<< Updated upstream
-            messagebox.showerror("Error", "No se encontro el archivo de usuarios")
-            
-    def ventanaRegistro(self):
-        contrasena_admin = simpledialog.askstring("Contraseña de administrador",
-                                              "Ingrese la contraseña de administrador:",
-                                              show='*', parent=self.ventana)
-        if contrasena_admin == self.admin_password:
-            self.ventana.destroy()
-            registro.Registrar()
-        elif contrasena_admin is None:
-            # El usuario canceló el diálogo
-            messagebox.showerror("Error", "Contraseña de administrador requerida")
-        else:
-            messagebox.showerror("Error", "Contraseña de administrador incorrecta")
-        self.mostrar_mensaje("Contraseña de administrador incorrecta", "red")
-        
-        
-            
-        
-=======
             messagebox.showerror("Error", "No se encontró el archivo de usuarios")
 
     def ventana_registro(self):
         self.ventana.destroy()
         registro.Registrar()
->>>>>>> Stashed changes

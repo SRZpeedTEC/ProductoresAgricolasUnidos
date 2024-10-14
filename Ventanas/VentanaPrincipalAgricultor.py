@@ -2,14 +2,13 @@ from tkinter import *
 from tkinter.font import Font
 import Utiles.Genericos as gnr
 from PIL import ImageTk, Image
+import Ventanas.Ventana_Agricultor.formulario as formulario
+import Ventanas.Ventana_Agricultor.ver_lote as ver_lote
+import Ventanas.Ventana_Agricultor.editar_lote as editar_lote
 
-<<<<<<< Updated upstream:Ventanas/ventanaPrincipal.py
-class VentanaPrincipal:
-    
-=======
+
 class VentanaPrincipalAgricultor:
 
->>>>>>> Stashed changes:Ventanas/VentanaPrincipalAgricultor.py
     def __init__(self):
         self.ventana = Tk()
         self.ventana.title('Ventana Principal Agricultor')
@@ -20,11 +19,6 @@ class VentanaPrincipalAgricultor:
         
         logo = gnr.leer_imagen("./Resources/logoProvisional.png", (200, 200))
         lblLogo = Label(self.ventana, image=logo, bg="#B6FFA1")
-<<<<<<< Updated upstream:Ventanas/ventanaPrincipal.py
-        lblLogo.place(x=0, y=0, relwidth=1, relheight=1)  
-        self.ventana.mainloop()   
-           
-=======
         lblLogo.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Crear botones de navegación
@@ -49,4 +43,3 @@ class VentanaPrincipalAgricultor:
         btn_ver_lote.grid(row=2, column=0, padx=10, pady=10)
 
 
->>>>>>> Stashed changes:Ventanas/VentanaPrincipalAgricultor.py
