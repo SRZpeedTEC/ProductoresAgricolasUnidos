@@ -1,5 +1,5 @@
-from Ventanas.Ventana_Agricultor.VentanaPrincipalAgricultor import VentanaPrincipalAgricultor
-from Ventanas.Ventana_Fabricante.VentanaPrincipalFabricante import VentanaPrincipalFabricante
+from Ventanas.VentanaAgricultor import VentanaPrincipalAgricultor
+from Ventanas.VentanaFabricante import VentanaPrincipalFabricante
 from Ventanas.Login.registro.login import Login
 import os
 

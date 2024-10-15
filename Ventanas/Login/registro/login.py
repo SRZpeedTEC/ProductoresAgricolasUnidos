@@ -3,11 +3,10 @@ from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
-from Ventanas.Login.registro import registro
 from PIL import ImageTk, Image
 
-from Ventanas.Ventana_Agricultor import VentanaPrincipalAgricultor
-from Ventanas.Ventana_Fabricante import VentanaPrincipalFabricante
+from Ventanas.VentanaAgricultor import VentanaPrincipalAgricultor
+from Ventanas.VentanaFabricante import VentanaPrincipalFabricante
 
 class Login:
 
@@ -88,9 +87,9 @@ class Login:
                 self.ventana.destroy()
                 # Determinar si abrir Ventana de Productor o Fabricante según el rol almacenado
                 if rol == "Fabricante":
-                    VentanaPrincipalFabricante.VentanaPrincipalFabricante()
+                    VentanaPrincipalFabricante()
                 elif rol == "Agricultor":
-                    VentanaPrincipalAgricultor.VentanaPrincipalAgricultor()
+                    VentanaPrincipalAgricultor()
             else:
                 messagebox.showerror("Error", "Credenciales inválidas")
 
@@ -99,4 +98,5 @@ class Login:
 
     def ventana_registro(self):
         self.ventana.destroy()
+        from Ventanas.Login.registro import registro
         registro.Registrar()

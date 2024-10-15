@@ -1,16 +1,7 @@
-Agricultor,1234
-Productor,5678
-nuevo,4321
-Agricultor2,1313
-hola,123
-prueba,321
 santi,123,Agricultor
 kevin,321,Fabricante
-<<<<<<< Updated upstream
-=======
 Jose,123,Fabricante
 kembly,2907,Agriculto
 Agricultor,111,Agricultor
 Fabricante,111,Fabricante
 Hola,1111,Agricultor
->>>>>>> Stashed changes
