@@ -13,7 +13,7 @@ class VentanaPrincipalFabricante:
         self.ventana.title('Ventana Principal - Fabricante')
         centrar_ventana(self.ventana, 700, 600)
         self.ventana.geometry("1000x600")
-        self.ventana.config(bg="#A0D683")
+        self.ventana.config(bg="#B6FFA1")
         self.ventana.resizable(0, 0)
 
         # Frame principal para los botones y contenido
@@ -26,7 +26,7 @@ class VentanaPrincipalFabricante:
 
         # Frame para mostrar el contenido (lado derecho)
         self.content_frame = Frame(self.main_frame, bg="#B6FFA1")
-        self.content_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=10, pady=10)
+        self.content_frame.pack(side=RIGHT, fill=BOTH, expand=True)
 
         # Crear botones de navegación
         self.crear_botones()

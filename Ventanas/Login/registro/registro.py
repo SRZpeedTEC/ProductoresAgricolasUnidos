@@ -13,7 +13,7 @@ class Registrar:
         self.ventana = Tk()
         self.ventana.title('Registro de Usuario')
         self.ventana.geometry('900x500')
-        self.ventana.config(bg='#fcfcfc')
+        self.ventana.config(bg='white')
         self.ventana.resizable(width=0, height=0)
         genericos.centrar_ventana(self.ventana, 900, 500)
 

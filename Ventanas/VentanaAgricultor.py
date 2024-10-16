@@ -13,7 +13,7 @@ class VentanaPrincipalAgricultor:
         self.ventana = Tk()
         self.ventana.title('Ventana Principal Agricultor')
         self.ventana.geometry("900x600")
-        self.ventana.config(bg="#A0D683")
+        self.ventana.config(bg="#B6FFA1")
         self.ventana.resizable(0, 0)
 
         # Frame principal para los botones y contenido
@@ -26,7 +26,7 @@ class VentanaPrincipalAgricultor:
 
         # Frame para mostrar el contenido (lado derecho)
         self.content_frame = Frame(self.main_frame, bg="#B6FFA1")
-        self.content_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=20, pady=20)
+        self.content_frame.pack(side=RIGHT, fill=BOTH, expand=True)
 
         # Cargar y mostrar la imagen del tomate
         self.mostrar_logo()

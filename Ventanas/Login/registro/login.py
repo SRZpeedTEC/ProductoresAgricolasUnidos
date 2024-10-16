@@ -14,7 +14,7 @@ class Login:
         self.ventana = Tk()
         self.ventana.title('Inicio de sesión')
         self.ventana.geometry('700x500')
-        self.ventana.config(bg='#fcfcfc')
+        self.ventana.config(bg='white')
         self.ventana.resizable(width=0, height=0)
         genericos.centrar_ventana(self.ventana, 700, 500)
 
