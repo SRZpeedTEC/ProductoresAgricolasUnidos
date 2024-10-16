@@ -107,10 +107,19 @@ class InterfazWeb():
         messagebox.showinfo("Carrito", "Esta funcionalidad está en desarrollo.")
         
     def iniciar_sesion(self):
-        messagebox.showinfo("Iniciar Sesión", "Esta funcionalidad está en desarrollo.")
+        self.Interfaz.destroy()
+        from Pagina_Web.Ventanas_Web.Login_Cliente import Login_Cliente
+        Login_Cliente()
+        # Luego, una vez que el login sea exitoso, puedes re-mostrar la ventana original
+        if Login_Cliente.inicio_exitoso:  # Supongo que tienes una manera de verificar si el login fue exitoso
+            self.Interfaz.deiconify()  # Mostrar la ventana de nuevo
+        else:
+            self.Interfaz.deiconify()  # Si el login falla, la ventana original se vuelve a mostrar
         
     def registrarse(self):
-        messagebox.showinfo("Registrarse", "Esta funcionalidad está en desarrollo.")
+        self.Interfaz.destroy()
+        from Pagina_Web.Ventanas_Web.Registro_Cliente import Registrar_Cliente
+        Registrar_Cliente()
         
     def buscar_productos(self):
         termino = self.buscar_var.get()
@@ -121,5 +130,8 @@ class InterfazWeb():
         
     def agregar_al_carrito(self, producto):
         messagebox.showinfo("Agregar al Carrito", f"{producto['nombre']} ha sido agregado al carrito.")
+
+    
+        
         
         
