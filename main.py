@@ -8,4 +8,5 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(project_dir)
 
 # Login()
-InterfazWeb()
+usuario = ("Santiago", "1234")
+InterfazWeb(usuario)
