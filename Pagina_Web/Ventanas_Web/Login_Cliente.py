@@ -63,9 +63,6 @@ class Login_Cliente:
         registrarse = Button(frame_form_fill, text="Registrar Usuario", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.ventana_registro)
         registrarse.pack(fill=X, padx=20, pady=10)
 
-        # Inicializar la variable de éxito de inicio de sesión
-        self.inicio_exitoso = False
-
         self.ventana.mainloop()
 
     def verificar_datos(self):
@@ -91,11 +88,15 @@ class Login_Cliente:
                             break
 
             if credenciales_validas:
-                messagebox.showinfo("Información", "Inicio de sesión exitoso")
-                self.inicio_exitoso = True
                 # Aquí puedes cerrar la ventana de login o realizar alguna acción adicional
-                self.ventana.destroy()  # Ocultar la ventana después del login
-                
+                self.ventana.destroy()  
+
+                infomacion_usuario = [usuario_archivo,contrasena_archivo]
+                from Pagina_Web.InterfazPW import InterfazWeb
+                InterfazWeb(infomacion_usuario)
+
+
+
             else:
                 self.inicio_exitoso = False
                 messagebox.showerror("Error", "Credenciales inválidas")
@@ -104,6 +105,6 @@ class Login_Cliente:
             messagebox.showerror("Error", "No se encontró el archivo de usuarios")
 
     def ventana_registro(self):
-        self.ventana.withdraw()  # Ocultar la ventana en lugar de destruirla
+        self.ventana.destroy()  
         from Pagina_Web.Ventanas_Web.Registro_Cliente import Registrar_Cliente
         Registrar_Cliente()

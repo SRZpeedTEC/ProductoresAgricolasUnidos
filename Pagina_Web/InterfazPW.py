@@ -62,7 +62,7 @@ class InterfazWeb():
             btn_registrarse = Button(nav_frame, text="Registrarse", font=Font(family='Times', size=12), background='white', command=self.registrarse, fg='white', bg="#274b2c", bd=0)
             btn_registrarse.pack(side=RIGHT)
         else:
-            lbl_usuario = Label(nav_frame, text=f"Bienvenido, {self.cliente[0]}", font=Font(family='Times', size=12), fg='white', bg="#274b2c")
+            lbl_usuario = Label(nav_frame, text=f"Bienvenido {self.cliente[0]}", font=Font(family='Times', size=12), fg='white', bg="#274b2c")
             lbl_usuario.pack(side=RIGHT, padx=10)
 
             btn_cerrar_sesion = Button(nav_frame, text="Cerrar Sesión", font=Font(family='Times', size=12), background='white', command=self.cerrar_sesion, fg='white', bg="#274b2c", bd=0)
@@ -158,13 +158,18 @@ class InterfazWeb():
         messagebox.showinfo("Carrito", "Esta funcionalidad está en desarrollo.")
         
     def iniciar_sesion(self):
-        messagebox.showinfo("Iniciar Sesión", "Esta funcionalidad está en desarrollo.")
+        self.Interfaz.destroy()
+        from Pagina_Web.Ventanas_Web.Login_Cliente import Login_Cliente
+        Login_Cliente()
         
     def cerrar_sesion(self):
-        messagebox.showinfo("Cerrar Sesión", "Esta funcionalidad está en desarrollo.")   
+        self.Interfaz.destroy()
+        InterfazWeb()
            
     def registrarse(self):
-        messagebox.showinfo("Registrarse", "Esta funcionalidad está en desarrollo.")
+        self.Interfaz.destroy()
+        from Pagina_Web.Ventanas_Web.Registro_Cliente import Registrar_Cliente
+        Registrar_Cliente()
         
     def buscar_productos(self):
         termino = self.buscar_var.get()
