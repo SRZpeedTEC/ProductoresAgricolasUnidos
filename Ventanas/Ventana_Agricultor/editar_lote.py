@@ -6,7 +6,7 @@ from natsort import natsorted
 def mostrar_editar_lote(content_frame):
     limpiar_frame_contenido(content_frame)
 
-    Label(content_frame, text="Editar Lote", bg="#B6FFA1", font=("Arial", 16, "bold")).pack(pady=10)
+    Label(content_frame, text="Editar Lote", bg="white", font=("Times", 16, "bold")).pack(pady=10)
 
     lote_tree = crear_lote_treeview(content_frame)
 
@@ -41,15 +41,15 @@ def mostrar_editar_lote(content_frame):
 
     lote_tree.bind("<ButtonRelease-1>", seleccionar_lote)
 
-    Label(content_frame, text="Tipo de Producto:", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Tipo de Producto:", bg="white", font=("Times", 12)).pack(pady=5)
     tipo_entry = ttk.Combobox(content_frame, textvariable=tipo_var, values=["Tomate", "Papa"], state="readonly")
     tipo_entry.pack(pady=5)
 
-    Label(content_frame, text="Cantidad (kg):", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Cantidad (kg):", bg="white", font=("Times", 12)).pack(pady=5)
     cantidad_entry = Entry(content_frame, textvariable=cantidad_var)
     cantidad_entry.pack(pady=5)
 
-    btn_guardar = Button(content_frame, text="Guardar Cambios", command=lambda: guardar_cambios(lote_tree, tipo_var, cantidad_var, fecha_var, lote_var), bg="#4CAF50", font=("Arial", 12), fg="white")
+    btn_guardar = Button(content_frame, text="Guardar Cambios", command=lambda: guardar_cambios(lote_tree, tipo_var, cantidad_var, fecha_var, lote_var), bg="#B90518", font=("Times", 12), fg="white")
     btn_guardar.pack(pady=20)
 
 def guardar_cambios(lote_tree, tipo_var, cantidad_var, fecha_var, lote_var):

@@ -6,25 +6,25 @@ import tkinter.messagebox as messagebox
 def mostrar_registro_lote(content_frame):
     limpiar_frame_contenido(content_frame)
 
-    Label(content_frame, text="Registro de Lotes", bg="#B6FFA1", font=("Arial", 16, "bold")).pack(pady=10)
+    Label(content_frame, text="Registro de Lotes", bg="white", font=("Times", 16, "bold")).pack(pady=10)
 
     # Tipo de producto
-    Label(content_frame, text="Tipo de producto:", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Tipo de producto:", bg="white", font=("Times", 12)).pack(pady=5)
     combo_tipo_producto = ttk.Combobox(content_frame, values=["Tomate", "Papa"], state="readonly")
     combo_tipo_producto.pack(pady=5)
 
     # Cantidad cosechada
-    Label(content_frame, text="Cantidad cosechada (kg):", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Cantidad cosechada (kg):", bg="white", font=("Times", 12)).pack(pady=5)
     entry_cantidad = Entry(content_frame)
     entry_cantidad.pack(pady=5)
 
     # Lote del producto (se llenará automáticamente)
-    Label(content_frame, text="Lote del producto:", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Lote del producto:", bg="white", font=("Times", 12)).pack(pady=5)
     lote_entry = Entry(content_frame, state="readonly")
     lote_entry.pack(pady=5)
 
     # Fecha de cosecha
-    Label(content_frame, text="Fecha de cosecha:", bg="#B6FFA1", font=("Arial", 12)).pack(pady=5)
+    Label(content_frame, text="Fecha de cosecha:", bg="white", font=("Times", 12)).pack(pady=5)
     cal = Calendar(content_frame, selectmode='day', date_pattern='y-mm-dd')
     cal.pack(pady=10)
 
@@ -64,7 +64,7 @@ def mostrar_registro_lote(content_frame):
     cal.bind("<<CalendarSelected>>", lambda event: actualizar_lote())
 
     # Botón para registrar lote
-    btn_registrar = Button(content_frame, text="Registrar Lote", command=lambda: registrar_lote(combo_tipo_producto, entry_cantidad, cal, lote_entry), bg="#4CAF50", font=("Arial", 12, "bold"), fg="white", padx=20)
+    btn_registrar = Button(content_frame, text="Registrar Lote", command=lambda: registrar_lote(combo_tipo_producto, entry_cantidad, cal, lote_entry), bg="#B90518", font=("Times", 12, "bold"), fg="white", padx=20)
     btn_registrar.pack(pady=20)
 
 def registrar_lote(combo_tipo_producto, entry_cantidad, cal, lote_entry):

@@ -6,7 +6,7 @@ from natsort import natsorted
 def mostrar_ver_lote(content_frame):
     limpiar_frame_contenido(content_frame)
 
-    Label(content_frame, text="Ver Lotes Registrados", bg="#B6FFA1", font=("Arial", 16, "bold")).pack(pady=10)
+    Label(content_frame, text="Ver Lotes Registrados", bg="white", font=("Times", 16, "bold")).pack(pady=10)
 
     lote_tree = crear_lote_treeview(content_frame)
 

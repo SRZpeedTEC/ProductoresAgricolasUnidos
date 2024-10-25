@@ -10,7 +10,7 @@ class VerLotesProcesados:
             widget.destroy()
 
         # Etiqueta de título
-        Label(parent_frame, text="Lotes Procesados", bg="#A0D683", font=("Arial", 18, "bold")).pack(pady=10)
+        Label(parent_frame, text="Lotes Procesados", bg="white", font=("Times", 18, "bold")).pack(pady=10)
 
         # Crear un Treeview para mostrar los lotes procesados con columnas detalladas
         columns = ("Lote", "Pequeños Verdes", "Pequeños Maduros", "Grandes Verdes", "Grandes Maduros", "Dañados")
@@ -70,4 +70,4 @@ class VerLotesProcesados:
                                 detalle_dict["Dañados"]
                             ))
         else:
-            Label(tree, text="No hay lotes procesados aún.", bg="#B6FFA1", font=("Arial", 12)).pack(pady=10)
+            Label(tree, text="No hay lotes procesados aún.", bg="white", font=("Times", 12)).pack(pady=10)

@@ -20,9 +20,9 @@ class Login:
 
         # Cargar logo
         logo = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (200, 200))
-        frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#A0D683')
+        frame_logo = Frame(self.ventana, bd=0, width=300, relief=SOLID, padx=10, pady=10, bg='#B90518')
         frame_logo.pack(side="left", fill=BOTH)
-        lbllogo = Label(frame_logo, image=logo, bg='#A0D683')
+        lbllogo = Label(frame_logo, image=logo, bg='#B90518')
         lbllogo.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Frame derecho para el formulario
@@ -51,11 +51,11 @@ class Login:
         self.password.config(show="*")
 
         # Botón de inicio de sesión
-        inicio = Button(frame_form_fill, text="Iniciar sesión", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.verificar_datos)
+        inicio = Button(frame_form_fill, text="Iniciar sesión", font=('Times', 15, BOLD), bg='#FCC509', bd=0, fg="#fff", command=self.verificar_datos)
         inicio.pack(fill=X, padx=20, pady=10)
 
         # Botón para registrar usuario
-        registrarse = Button(frame_form_fill, text="Registrar Usuario", font=('Times', 15, BOLD), bg='#A0D683', bd=0, fg="#fff", command=self.ventana_registro)
+        registrarse = Button(frame_form_fill, text="Registrar Usuario", font=('Times', 15, BOLD), bg='#FCC509', bd=0, fg="#fff", command=self.ventana_registro)
         registrarse.pack(fill=X, padx=20, pady=10)
 
         self.ventana.mainloop()
