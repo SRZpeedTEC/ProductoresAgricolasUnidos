@@ -5,7 +5,7 @@ from PIL import Image, ImageTk  # Para cargar y mostrar la imagen
 from Ventanas.Ventana_Agricultor.registro_lote import mostrar_registro_lote
 from Ventanas.Ventana_Agricultor.editar_lote import mostrar_editar_lote
 from Ventanas.Ventana_Agricultor.ver_lote import mostrar_ver_lote
-from Utiles.Genericos import centrar_ventana
+from Utiles.Genericos import centrar_ventana, leer_imagen
 
 class VentanaPrincipalAgricultor:
 
@@ -54,7 +54,7 @@ class VentanaPrincipalAgricultor:
     def mostrar_logo(self):
         # Mostrar el logo en el content frame
         self.limpiar_frame_contenido()
-        logo = gnr.leer_imagen("./Resources/Imgs/logoProvisional.png", (150, 150))
+        logo = leer_imagen("./Resources/Imgs/logoProvisional.png", (150, 150))
         lblLogo = Label(self.content_frame, image=logo, bg="white")
         lblLogo.image = logo  # Guardar una referencia para evitar que la imagen se borre
         lblLogo.pack(expand=True)

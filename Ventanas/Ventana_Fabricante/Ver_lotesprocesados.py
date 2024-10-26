@@ -4,32 +4,47 @@ import os
 
 class VerLotesProcesados:
 
-    def __init__(self, parent_frame):
-        # Limpiar el frame antes de agregar nuevos widgets
-        for widget in parent_frame.winfo_children():
+    def __init__(self, frame_adjunto):
+        for widget in frame_adjunto.winfo_children():
             widget.destroy()
 
         # Etiqueta de título
-        Label(parent_frame, text="Lotes Procesados", bg="white", font=("Times", 18, "bold")).pack(pady=10)
+        Label(frame_adjunto, text="Lotes Procesados", bg="white", font=("Times", 18, "bold")).pack(pady=10)
 
-        # Crear un Treeview para mostrar los lotes procesados con columnas detalladas
-        columns = ("Lote", "Pequeños Verdes", "Pequeños Maduros", "Grandes Verdes", "Grandes Maduros", "Dañados")
-        tree = ttk.Treeview(parent_frame, columns=columns, show="headings", height=15)
-        tree.pack(fill=BOTH, expand=True, padx=10, pady=10)
+        # Crear un Frame para contener el Treeview y las Scrollbars
+        frame_tree = Frame(frame_adjunto)
+        frame_tree.pack(fill=BOTH, expand=True)
 
-        # Definir encabezados
+        # Definir las columnas del Treeview
+        columns = ("Lote", "TOM-001", "TOM-002", "TOM-003", "PAP-001")
+
+        # Crear el Treeview
+        tree = ttk.Treeview(frame_tree, columns=columns, show="headings", height=15)
+
+        # Configurar las columnas y encabezados
         tree.heading("Lote", text="ID del Lote")
-        tree.heading("Pequeños Verdes", text="Pequeños Verdes (kg)")
-        tree.heading("Pequeños Maduros", text="Pequeños Maduros (kg)")
-        tree.heading("Grandes Verdes", text="Grandes Verdes (kg)")
-        tree.heading("Grandes Maduros", text="Grandes Maduros (kg)")
-        tree.heading("Dañados", text="Dañados (kg)")
+        tree.heading("TOM-001", text="Tomates Frescos kg")
+        tree.heading("TOM-002", text="Tomates Frescos Grande kg")
+        tree.heading("TOM-003", text="Tomates Frescos Pequeño kg")
+        tree.heading("PAP-001", text="Papas Frescas")
 
-        # Ajustar el ancho de las columnas
         for col in columns:
             tree.column(col, width=150, anchor=CENTER)
 
-        # Leer el archivo de lotes procesados y llenar el Treeview
+        # Crear una Scrollbar vertical y asociarla al Treeview
+        scrollbar_vertical = Scrollbar(frame_tree, orient=VERTICAL, command=tree.yview)
+        tree.configure(yscrollcommand=scrollbar_vertical.set)
+        scrollbar_vertical.pack(side=RIGHT, fill=Y)
+
+        # Crear una Scrollbar horizontal y asociarla al Treeview
+        scrollbar_horizontal = Scrollbar(frame_tree, orient=HORIZONTAL, command=tree.xview)
+        tree.configure(xscrollcommand=scrollbar_horizontal.set)
+        scrollbar_horizontal.pack(side=BOTTOM, fill=X)
+
+        # Empaquetar el Treeview
+        tree.pack(fill=BOTH, expand=True)
+
+    # Leer el archivo de lotes procesados y llenar el Treeview
         self.cargar_lotes_procesados(tree)
 
     def cargar_lotes_procesados(self, tree):
@@ -41,33 +56,16 @@ class VerLotesProcesados:
                         partes = line.strip().split(':', 1)
                         if len(partes) == 2:
                             lote_id = partes[0]
-                            detalles = partes[1].split(", ")
-
-                            # Inicializar los valores para cada columna
-                            detalle_dict = {
-                                "Pequeños Verdes": 0,
-                                "Pequeños Maduros": 0,
-                                "Grandes Verdes": 0,
-                                "Grandes Maduros": 0,
-                                "Dañados": 0
-                            }
-
-                            # Parsear los detalles y asignar los valores correspondientes
-                            for detalle in detalles:
+                            informacion_procesamiento = partes[1].split(", ")
+                            detalles_columna = {"TOM-001": 0, "TOM-002": 0, "TOM-003": 0, "PAP-001": 0}
+                            
+                            for detalle in informacion_procesamiento:
                                 key, value = detalle.split(": ")
                                 key = key.strip()
-                                value = int(value.strip().replace(" kg", ""))
-                                if key in detalle_dict:
-                                    detalle_dict[key] = value
-
-                            # Insertar en el Treeview
-                            tree.insert("", "end", values=(
-                                lote_id,
-                                detalle_dict["Pequeños Verdes"],
-                                detalle_dict["Pequeños Maduros"],
-                                detalle_dict["Grandes Verdes"],
-                                detalle_dict["Grandes Maduros"],
-                                detalle_dict["Dañados"]
-                            ))
+                                value = int(value.strip().replace("Kilogramos", ""))
+                                if key in detalles_columna:
+                                    detalles_columna[key] = value
+                            
+                            tree.insert("", "end", values=(lote_id, detalles_columna["TOM-001"], detalles_columna["TOM-002"], detalles_columna["TOM-003"], detalles_columna["PAP-001"]))
         else:
             Label(tree, text="No hay lotes procesados aún.", bg="white", font=("Times", 12)).pack(pady=10)

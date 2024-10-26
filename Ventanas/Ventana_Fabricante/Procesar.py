@@ -1,8 +1,7 @@
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import os
 import random
-from .Ver_lotesprocesados import VerLotesProcesados
 
 class Procesar:
 
@@ -55,10 +54,34 @@ class Procesar:
         self.text_area = Text(parent_frame, wrap=WORD, width=80, height=10, font=("Times", 10))
         self.text_area.pack(pady=10)
 
+        # Cargar el diccionario de productos
+        self.productos = self.cargar_productos()
+
+    def cargar_productos(self):
+        productos = {}
+        try:
+            with open("Resources/txt_informacion_productos/materia_prima_items.txt", "r") as file:
+                for line in file:
+                    if line.strip():
+                        partes = line.strip().split('|')
+                        if len(partes) == 3:
+                            codigo = partes[0].strip()
+                            descripcion = partes[1].strip()
+                            unidad_medida = partes[2].strip()
+                            productos[codigo] = {
+                                'descripcion': descripcion,
+                                'unidadMedida': unidad_medida
+                            }
+                        else:
+                            messagebox.showwarning("Advertencia", f"Línea inválida en productos.txt: {line}")
+            return productos
+        except FileNotFoundError:
+            messagebox.showerror("Error", "No se encontró el archivo de productos.")
+            return {}
+
     def leer_lotes_procesados(self):
         # Leer el archivo de lotes procesados y devolver un conjunto de lotes ya procesados
         lotes_procesados = set()
-        # Cambiar la ruta a la nueva ubicación de los lotes procesados
         path = "Resources/txt_lotes/lotes_procesados.txt"
         if os.path.exists(path):
             with open(path, "r") as file:
@@ -71,7 +94,7 @@ class Procesar:
     def actualizar_lotes_disponibles(self):
         # Leer el archivo de lotes y llenar el combobox con solo el identificador del lote
         lotes = []
-        path = "Resources/txt_lotes/lotes.txt"  # Cambiar esta ruta si también moviste el archivo de lotes
+        path = "Resources/txt_lotes/lotes.txt"
         if os.path.exists(path):
             with open(path, "r") as file:
                 for line in file:
@@ -81,7 +104,7 @@ class Procesar:
                             lote_id = partes[3]  # Extraer solo el identificador del lote
                             if lote_id not in self.lotes_procesados:
                                 lotes.append(lote_id)
-        
+
         # Actualizar el combobox con los lotes encontrados
         self.lote_selector['values'] = lotes
         if lotes:
@@ -114,12 +137,7 @@ class Procesar:
         else:
             # Simular el procesamiento del lote
             self.simular_procesamiento()
-
-            # Añadir el lote confirmado a la lista de lotes procesados y registrarlo en el archivo
-            self.lotes_procesados.add(self.lote_confirmado)
-            with open("Resources/txt_lotes/lotes_procesados.txt", "a") as file:  # Actualizar la ruta
-                file.write(f"{self.lote_confirmado}: {self.resultado_procesamiento}\n")
-
+               
             # Actualizar la lista de lotes disponibles
             self.actualizar_lotes_disponibles()
             # Resetear el lote confirmado
@@ -136,23 +154,37 @@ class Procesar:
             self.actualizar_log(f"Lote {lote} confirmado para procesamiento.")
 
     def simular_procesamiento(self):
-        # Simular el procesamiento de un lote, dividiendo en categorías específicas
-        categorias = ['Pequeños Verdes', 'Pequeños Maduros', 'Grandes Verdes', 'Grandes Maduros', 'Dañados']
+        # Utilizar los códigos de materia prima del diccionario de productos
+        if self.lote_confirmado.startswith("T"):
+            codigos_materia_prima = ['TOM-001', 'TOM-002', 'TOM-003']
+        else:
+            codigos_materia_prima = ['PAP-001']
+            
         resultado = {}
 
-        # Generar aleatoriamente la cantidad de kilogramos para cada categoría
-        for categoria in categorias:
-            cantidad_kg = random.randint(10, 50)  # Simulando entre 10 y 50 kg
-            resultado[categoria] = cantidad_kg
+        # Generar aleatoriamente la cantidad para cada código
+        for codigo in codigos_materia_prima:
+            cantidad = random.randint(10, 50)  # Simulando entre 10 y 50 unidades
+            resultado[codigo] = cantidad
 
         # Actualizar el log con los detalles del procesamiento
         self.actualizar_log("Resultado del procesamiento:")
-        for key, value in resultado.items():
-            self.actualizar_log(f"  {key}: {value} kg")
+        for codigo, cantidad in resultado.items():
+            producto = self.productos.get(codigo, {})
+            descripcion = producto.get('descripcion', 'No disponible')
+            unidad = producto.get('unidadMedida', 'Unidad')
+            self.actualizar_log(f"  {codigo} - {descripcion}: {cantidad} {unidad}")
 
-        # Guardar el resultado para registrar en el archivo
-        self.resultado_procesamiento = ", ".join([f"{key}: {value} kg" for key, value in resultado.items()])
-
-    def mostrar_lotes_procesados(self, parent_frame):
-        # Llamar a la clase VerLotesProcesados para cargar los lotes procesados
-        VerLotesProcesados(parent_frame)
+        # Guardar el resultado en materia_prima.txt
+        with open("Resources/txt_informacion_productos/materia_prima.txt", "a") as file:
+            for codigo, cantidad in resultado.items():
+                unidad = self.productos.get(codigo, {}).get('unidadMedida', 'Unidad')
+                file.write(f"{codigo}: {cantidad} {unidad}\n")
+        
+        lote_procesado_informacion = f"{self.lote_confirmado}: "
+        self.lotes_procesados.add(self.lote_confirmado)
+        with open("Resources/txt_lotes/lotes_procesados.txt", "a") as file:
+            for codigo, cantidad in resultado.items():
+                lote_procesado_informacion += f"{codigo}: {cantidad} {unidad}, "
+            file.write(lote_procesado_informacion.strip(", ") + "\n")
+            

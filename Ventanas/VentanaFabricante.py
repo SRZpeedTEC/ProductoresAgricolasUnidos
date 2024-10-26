@@ -4,7 +4,7 @@ import os
 import Utiles.Genericos as gnr
 from PIL import ImageTk, Image
 from Utiles.Genericos import centrar_ventana
-import Ventanas.Ventana_Fabricante.Procesar as Procesar
+from Ventanas.Ventana_Fabricante import Procesar, Ver_lotesprocesados, MaestroArticulos
 
 class VentanaPrincipalFabricante:
 
@@ -44,10 +44,14 @@ class VentanaPrincipalFabricante:
 
         btn_ver_procesados = Button(self.nav_frame, text="Ver Lotes Procesados", command=self.mostrar_lotes_procesados, bg="#eeeaea", font=btn_font, width=20)
         btn_ver_procesados.pack(pady=10)
+        
+        btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=self.mostrar_maestro_articulos, bg="#eeeaea", font=btn_font, width=20)
+        btn_maestro_articulos.pack(pady=10)
 
         btn_volver_login = Button(self.nav_frame, text="Volver al Login", command=self.volver_login, bg="#eeeaea", font=btn_font, width=20)
         btn_volver_login.pack(pady=10)
-
+        
+        
     def limpiar_frame_contenido(self):
         # Limpiar el frame de contenido antes de mostrar algo nuevo
         for widget in self.content_frame.winfo_children():
@@ -69,58 +73,12 @@ class VentanaPrincipalFabricante:
     def mostrar_lotes_procesados(self):
         # Mostrar los lotes procesados en el content_frame
         self.limpiar_frame_contenido()
-
-        # Crear un Treeview para mostrar los lotes procesados con columnas detalladas
-        columns = ("Lote", "Pequeños Verdes", "Pequeños Maduros", "Grandes Verdes", "Grandes Maduros", "Dañados")
-        tree = ttk.Treeview(self.content_frame, columns=columns, show="headings", height=15)
-        tree.pack(fill=BOTH, expand=True, padx=10, pady=10)
-
-        # Definir encabezados
-        tree.heading("Lote", text="ID del Lote")
-        tree.heading("Pequeños Verdes", text="Pequeños Verdes (kg)")
-        tree.heading("Pequeños Maduros", text="Pequeños Maduros (kg)")
-        tree.heading("Grandes Verdes", text="Grandes Verdes (kg)")
-        tree.heading("Grandes Maduros", text="Grandes Maduros (kg)")
-        tree.heading("Dañados", text="Dañados (kg)")
-
-        # Ajustar el ancho de las columnas
-        for col in columns:
-            tree.column(col, width=150, anchor=CENTER)
-
-        # Leer el archivo de lotes procesados y llenar el Treeview
-        if os.path.exists("Resources/txt_lotes/lotes_procesados.txt"):
-            with open("Resources/txt_lotes/lotes_procesados.txt", "r") as file:
-                for line in file:
-                    if line.strip():
-                        partes = line.strip().split(':', 1)
-                        if len(partes) == 2:
-                            lote_id = partes[0]
-                            detalles = partes[1].split(", ")
-
-                            # Inicializar los valores para cada columna de detalles
-                            detalle_dict = {
-                                "Pequeños Verdes": 0,
-                                "Pequeños Maduros": 0,
-                                "Grandes Verdes": 0,
-                                "Grandes Maduros": 0,
-                                "Dañados": 0
-                            }
-
-                            # Parsear los detalles y llenar el diccionario
-                            for detalle in detalles:
-                                key, value = detalle.split(": ")
-                                detalle_dict[key.strip()] = int(value.strip().replace(" kg", ""))
-
-                            # Insertar en el Treeview
-                            tree.insert("", "end", values=(lote_id,
-                                                           detalle_dict["Pequeños Verdes"],
-                                                           detalle_dict["Pequeños Maduros"],
-                                                           detalle_dict["Grandes Verdes"],
-                                                           detalle_dict["Grandes Maduros"],
-                                                           detalle_dict["Dañados"]))
-        else:
-            # Si no hay lotes procesados, mostrar un mensaje
-            Label(self.content_frame, text="No hay lotes procesados aún.", bg="white", font=("Times", 12)).pack(pady=10)
+        Ver_lotesprocesados.VerLotesProcesados(self.content_frame)
+            
+    def mostrar_maestro_articulos(self):
+        # Crear la vista de maestro de artículos en el content_frame
+        self.limpiar_frame_contenido()
+        MaestroArticulos.GestionMateriaPrima(self.content_frame)
 
     def volver_login(self):
         # Volver a la pantalla de login
