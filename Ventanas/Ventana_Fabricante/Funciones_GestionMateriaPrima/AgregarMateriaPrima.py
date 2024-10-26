@@ -7,11 +7,12 @@ from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima.GuardarMateriaPri
 
 class AgregarMateriaPrima:
     
-    def __init__(self):
-        
-        self.guardar_materia_prima = GuardarMateriaPrima()
+    def __init__(self, productos):
+              
+        self.productos = productos
+        self.guardar_materia_prima = GuardarMateriaPrima(self.productos)
             
-    def agregar_materia_prima(self):
+    def agregar_materia_prima(self, tree):
         self.ventana_agregar = Toplevel()
         self.ventana_agregar.title("Agregar Materia Prima")
         self.ventana_agregar.geometry("300x400")       
@@ -36,7 +37,7 @@ class AgregarMateriaPrima:
         self.cantidad_var = StringVar()
         Entry(self.ventana_agregar, textvariable=self.cantidad_var).pack(pady=5)
 
-        Button(self.ventana_agregar, text="Guardar", command=self.guardar_nueva_materia_prima).pack(pady=10)
+        Button(self.ventana_agregar, text="Guardar", command=lambda: self.guardar_materia_prima.guardar_nueva_materia_prima(self.codigo_var, self.cantidad_var, self.unidad_var, self.ventana_agregar, tree)).pack(pady=10)
         
     def actualizar_descripcion_producto(self, event):
         codigo = self.codigo_var.get()

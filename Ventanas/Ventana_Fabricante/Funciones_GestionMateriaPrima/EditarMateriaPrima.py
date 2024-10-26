@@ -7,19 +7,20 @@ from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima.GuardarMateriaPri
 
 class EditarMateriaPrima:
     
-    def __init__(self):
+    def __init__(self, productos):
         
-        self.guardar_materia_prima = GuardarMateriaPrima()
+        self.productos = productos
+        self.guardar_materia_prima = GuardarMateriaPrima(self.productos)
         
-    def editar_materia_prima(self):
+    def editar_materia_prima(self, treeProductos):
     # Obtener el item seleccionado
-        selected_item = self.tree.focus()
+        selected_item = treeProductos.focus()
         if not selected_item:
             messagebox.showwarning("Advertencia", "Debe seleccionar un elemento para editar.")
             return
     
         # Obtener los valores
-        values = self.tree.item(selected_item, 'values')
+        values = treeProductos.item(selected_item, 'values')
         codigo_seleccionado = values[0]
         descripcion = values[1]
         cantidad_actual = values[2]
@@ -45,4 +46,4 @@ class EditarMateriaPrima:
         self.cantidad_var_editar = StringVar(value=cantidad_actual)
         Entry(self.ventana_editar, textvariable=self.cantidad_var_editar).pack(pady=5)
     
-        Button(self.ventana_editar, text="Guardar", command=self.guardar_materia_prima_editada).pack(pady=10)
+        Button(self.ventana_editar, text="Guardar", command=lambda: self.guardar_materia_prima.guardar_materia_prima_editada(self.codigo_var_editar, self.cantidad_var_editar, self.ventana_editar, treeProductos)).pack(pady=10)
