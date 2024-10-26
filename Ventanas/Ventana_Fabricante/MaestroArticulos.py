@@ -2,17 +2,19 @@ from tkinter import *
 from tkinter import ttk
 import os
 import random
-from .Ver_lotesprocesados import VerLotesProcesados
 from tkinter import messagebox
+from Ventanas.Ventana_Fabricante.Manipulacion_txt.Manipulacion_txt import ManipulacionTXT
+from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima import GuardarMateriaPrima
 
 class GestionMateriaPrima:
     def __init__(self, frame):
-        for widget in frame.winfo_children():
-            widget.destroy()
-            
+        
+        self.manipular_txt = ManipulacionTXT()
         self.productos = self.cargar_productos()
-            
+               
+                     
         Label(frame, text="Gestion Materias Primas", bg="white", font=("Times", 18, "bold")).pack(pady=10)
+        
         
         controls_frame = Frame(frame, bg="white")
         controls_frame.pack(pady=10)
@@ -68,62 +70,97 @@ class GestionMateriaPrima:
         for item in self.tree.get_children():
             self.tree.delete(item)
         
-        # Leer los datos de materia_prima.txt
-        if os.path.exists("Resources/txt_informacion_productos/materia_prima.txt"):
-            with open("Resources/txt_informacion_productos/materia_prima.txt", "r") as file:
-                for line in file:
-                    if line.strip():
-                        partes = line.strip().split(":")
-                        if len(partes) == 2:
-                            codigo = partes[0].strip()
-                            cantidad_unidad = partes[1].strip()
-                            cantidad, unidad = self.extraer_cantidad_unidad(cantidad_unidad)
-                            producto = self.productos.get(codigo, {})
-                            descripcion = producto.get('descripcion', 'Descripción no encontrada')
-                            self.tree.insert("", "end", values=(codigo, descripcion, cantidad, unidad))
+        registros = self.manipular_txt.leer_materia_prima()
+        if registros:
+            for codigo, (cantidad, unidad) in registros.items():
+                producto = self.productos.get(codigo, {})
+                descripcion = producto.get('descripcion', 'No disponible')
+                self.tree.insert("", "end", values=(codigo, descripcion, cantidad, unidad))
+    
         else:               
             Label(self.tree, text="No hay materia prima registrada.", bg="white", font=("Times", 12)).pack(pady=10)
+            
+    def actualizar_registro(self, codigo, cantidad_nueva, unidad, sumar=True):
+        
+        registros = self.manipular_txt.leer_materia_prima()
+
+        if codigo in registros:
+            cantidad_existente, unidad_existente = registros[codigo]
+            if unidad_existente != unidad:
+                messagebox.showerror("Error", f"La unidad de medida no coincide para el producto {codigo}.")
+                return False
+            if sumar:
+                registros[codigo] = (cantidad_existente + cantidad_nueva, unidad)
+            else:
+                registros[codigo] = (cantidad_nueva, unidad)
+        else:
+            registros[codigo] = (cantidad_nueva, unidad)
+
+        self.manipular_txt.escribir_materia_prima(registros)
+        return True
     
+    def eliminar_registro(self, codigo):
+        registros = self.manipular_txt.leer_materia_prima()
+        if codigo in registros:
+            del registros[codigo]
+            self.manipular_txt.escribir_materia_prima(registros)
+            return True
+        else:
+            messagebox.showwarning("Advertencia", f"No se encontró el producto con código {codigo}.")
+            return False
+
+
+    def guardar_materia_prima(self, codigo, cantidad, unidad, sumar=True, ventana=None):
+        if codigo and cantidad:
+            try:
+                cantidad = float(cantidad)
+                if self.actualizar_registro(codigo, cantidad, unidad, sumar=sumar):
+                    self.cargar_materia_prima()
+                    if ventana:
+                        ventana.destroy()
+            except ValueError:
+                messagebox.showerror("Error", "La cantidad debe ser un número válido.")
+        else:
+            messagebox.showerror("Error", "Debe completar todos los campos.")
+
     
     
     def agregar_materia_prima(self):
         self.ventana_agregar = Toplevel()
         self.ventana_agregar.title("Agregar Materia Prima")
-        self.ventana_agregar.geometry("300x200")
+        self.ventana_agregar.geometry("300x400")       
         
         Label(self.ventana_agregar, text="Código del Producto:").pack(pady=5)
         self.codigo_var = StringVar()
         codigos_producto = list(self.productos.keys())
         self.codigo_selector = ttk.Combobox(self.ventana_agregar, textvariable=self.codigo_var, values=codigos_producto, state="readonly")
         self.codigo_selector.pack(pady=5)
-        self.codigo_selector.bind("<<ComboboxSelected>>", self.actualizar_descripcion_unidad)
+        self.codigo_selector.bind("<<ComboboxSelected>>", self.actualizar_descripcion_producto)
 
         # Etiqueta para mostrar la descripción del producto
         Label(self.ventana_agregar, text="Descripción:").pack(pady=5)
         self.descripcion_var = StringVar()
         self.lbl_descripcion = Label(self.ventana_agregar, textvariable=self.descripcion_var)
         self.lbl_descripcion.pack(pady=5)
-
-        # Etiqueta para mostrar la unidad de medida
-        Label(self.ventana_agregar, text="Unidad de Medida:").pack(pady=5)
-        self.unidad_var = StringVar()
-        self.lbl_unidad = Label(self.ventana_agregar, textvariable=self.unidad_var)
-        self.lbl_unidad.pack(pady=5)
-
-        # Campo para ingresar la cantidad
-        Label(self.ventana_agregar, text="Cantidad:").pack(pady=5)
+        
+        # Campo para ingresar la cantidad  
+        self.unidad_var = StringVar(self.ventana_agregar, value = "")     
+        self.lbl_unidad = Label(self.ventana_agregar, text=f"cantidad en: {self.unidad_var.get()}")
+        self.lbl_unidad.pack(pady=5) 
         self.cantidad_var = StringVar()
         Entry(self.ventana_agregar, textvariable=self.cantidad_var).pack(pady=5)
 
         Button(self.ventana_agregar, text="Guardar", command=self.guardar_nueva_materia_prima).pack(pady=10)
     
-    def actualizar_descripcion_unidad(self, event):
+    def actualizar_descripcion_producto(self, event):
         codigo = self.codigo_var.get()
         producto = self.productos.get(codigo, {})
         descripcion = producto.get('descripcion', 'No disponible')
-        unidad = producto.get('unidadMedida', 'No disponible')
+        unidad = producto.get('unidadMedida', 'No disponible')        
         self.descripcion_var.set(descripcion)
         self.unidad_var.set(unidad)
+        self.lbl_unidad.config(text=f"cantidad en: {self.unidad_var.get()}")
+        
     
     def extraer_cantidad_unidad(self, cantidad_unidad_str):
         # Asumiendo que el formato es "cantidad unidad"
@@ -135,57 +172,24 @@ class GestionMateriaPrima:
             cantidad = cantidad_unidad_str
             unidad = ""
         return cantidad, unidad
+           
         
     def guardar_nueva_materia_prima(self):
-        
         codigo = self.codigo_var.get().strip()
-        cantidad = self.cantidad_var.get().strip()
+        cantidad_nueva = self.cantidad_var.get().strip()
+        unidad = self.unidad_var.get()
 
-        if codigo and cantidad:
-            try:
-                cantidad_float = float(cantidad)
-                unidad = self.unidad_var.get()
-                with open("Resources/txt_informacion_productos/materia_prima.txt", "a") as file:
-                    file.write(f"{codigo}: {cantidad_float} {unidad}\n")
-                self.cargar_materia_prima()
-                self.ventana_agregar.destroy()
-            except ValueError:
-                messagebox.showerror("Error", "La cantidad debe ser un número válido.")
-        else:
-            messagebox.showerror("Error", "Debe completar todos los campos.")
+        self.guardar_materia_prima(
+            codigo=codigo,
+            cantidad=cantidad_nueva,
+            unidad=unidad,
+            sumar=True,
+            ventana=self.ventana_agregar
+        )
+
+
+
         
-    def cargar_informacion_materia_prima(self):
-        materia_prima = {}
-        try:
-            with open("Resources/txt_informacion_productos/materia_prima_items.txt", "r") as file:
-                for line in file:
-                    if line.strip():
-                        partes = line.strip().split('|')
-                        if len(partes) == 3:
-                            codigo = partes[0].strip()
-                            descripcion = partes[1].strip()
-                            unidad_medida = partes[2].strip()
-                            materia_prima[codigo] = {
-                                'descripcion': descripcion,
-                                'unidadMedida': unidad_medida
-                            }
-                        else:
-                            messagebox.showwarning("Advertencia", f"Línea inválida en productos.txt: {line}")
-            return materia_prima
-        except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo de productos.")
-            return {}
-        
-    def extraer_cantidad_unidad(self, cantidad_unidad_str):
-        # Asumiendo que el formato es "cantidad unidad"
-        partes = cantidad_unidad_str.strip().split()
-        if len(partes) >= 2:
-            cantidad = partes[0]
-            unidad = ' '.join(partes[1:])
-        else:
-            cantidad = cantidad_unidad_str
-            unidad = ""
-        return cantidad, unidad
     
     def editar_materia_prima(self):
     # Obtener el item seleccionado
@@ -237,52 +241,22 @@ class GestionMateriaPrima:
             values = self.tree.item(selected_item, 'values')
             codigo_seleccionado = values[0]
 
-            # Leer todos los registros y eliminar el seleccionado
-            registros = []
-            with open("Resources/txt_informacion_productos/materia_prima.txt", "r") as file:
-                for line in file:
-                    if line.strip():
-                        partes = line.strip().split(":")
-                        if len(partes) == 2:
-                            codigo_linea = partes[0].strip()
-                            if codigo_linea != codigo_seleccionado:
-                                registros.append(line)
+            if self.eliminar_registro(codigo_seleccionado):
+                self.cargar_materia_prima()
 
-            # Escribir los registros actualizados
-            with open("Resources/txt_informacion_productos/materia_prima.txt", "w") as file:
-                file.writelines(registros)
-
-            self.cargar_materia_prima()
     
     def guardar_materia_prima_editada(self):
         codigo = self.codigo_var_editar.get().strip()
         nueva_cantidad = self.cantidad_var_editar.get().strip()
         unidad = self.productos.get(codigo, {}).get('unidadMedida', '')
 
-        if nueva_cantidad:
-            try:
-                cantidad_float = float(nueva_cantidad)
-                # Leer todos los registros y actualizar el seleccionado
-                registros = []
-                with open("Resources/txt_informacion_productos/materia_prima.txt", "r") as file:
-                    for line in file:
-                        if line.strip():
-                            partes = line.strip().split(":")
-                            if len(partes) == 2:
-                                codigo_linea = partes[0].strip()
-                                if codigo_linea == codigo:
-                                    registros.append(f"{codigo}: {cantidad_float} {unidad}\n")
-                                else:
-                                    registros.append(line)
+        self.guardar_materia_prima(
+            codigo=codigo,
+            cantidad=nueva_cantidad,
+            unidad=unidad,
+            sumar=False,
+            ventana=self.ventana_editar
+        )
 
-                # Escribir los registros actualizados
-                with open("Resources/txt_informacion_productos/materia_prima.txt", "w") as file:
-                    file.writelines(registros)
 
-                self.cargar_materia_prima()
-                self.ventana_editar.destroy()
-            except ValueError:
-                messagebox.showerror("Error", "La cantidad debe ser un número válido.")
-        else:
-            messagebox.showerror("Error", "Debe completar todos los campos.")
 

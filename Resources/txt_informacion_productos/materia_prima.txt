@@ -1,3 +1,6 @@
-TOM-001: 10 Kilogramos
-TOM-002: 44 Kilogramos
-TOM-003: 22 Kilogramos
+TOM-001: 10.0 Kilogramos
+TOM-002: 46.0 Kilogramos
+TOM-003: 25.0 Kilogramos
+PAP-001: 20.0 Kilogramos
+AGU-001: 5.0 Litros
+OLI-001: 5.0 Litros
