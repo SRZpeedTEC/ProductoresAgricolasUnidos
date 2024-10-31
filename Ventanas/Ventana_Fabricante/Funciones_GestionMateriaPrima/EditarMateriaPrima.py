@@ -29,7 +29,7 @@ class EditarMateriaPrima:
         # Crear una nueva ventana para editar
         self.ventana_editar = Toplevel()
         self.ventana_editar.title("Editar Materia Prima")
-        self.ventana_editar.geometry("350x250")
+        self.ventana_editar.geometry("350x350")
     
         # Campos de entrada
         Label(self.ventana_editar, text="Código:").pack(pady=5)

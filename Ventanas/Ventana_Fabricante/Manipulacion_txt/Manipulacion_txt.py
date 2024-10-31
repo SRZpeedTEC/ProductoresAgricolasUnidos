@@ -6,10 +6,14 @@ from tkinter import messagebox
 
 class ManipulacionTXT:
     
+    
     def __init__(self):
         self.path_materia_prima = "Resources/txt_informacion_productos/materia_prima.txt"
         self.path_productos = "Resources/txt_informacion_productos/materia_prima_items.txt"
+        
 
+
+    
     def leer_materia_prima(self):
         registros = {}
         if os.path.exists(self.path_materia_prima):
@@ -28,11 +32,22 @@ class ManipulacionTXT:
                                 messagebox.showwarning("Advertencia", f"La cantidad no es válida en la línea: {line}")
         return registros
 
+    
     def escribir_materia_prima(self, registros):
         with open(self.path_materia_prima, "w") as file:
             for codigo_producto, (cantidad, unidad_medida) in registros.items():
                 file.write(f"{codigo_producto}: {cantidad} {unidad_medida}\n")
-
+                
+                
+              
+    def escribir_nuevo_producto(self, codigo_producto, descripcion_producto, unidad_medida, ventana):
+        with open(self.path_productos, "a") as file:
+            file.write(f"{codigo_producto}|{descripcion_producto}|{unidad_medida}\n")
+            ventana.destroy()
+            
+                
+                
+           
     def leer_productos(self):
         productos = {}
         try:

@@ -14,4 +14,6 @@ EMP-005|Botella plástica para salsa (1L)|Unidades
 EMP-006|Tapa para botella plástica (1L)|Unidades                                
 EMP-007|Lata para salsa de tomate (400g)|Unidades
 EMP-008|Lata para salsa de tomate (1kg)|Unidades
-
+PAP-002|Papa fresca grande|Kilogramos
+PAP-003|Papa fresca pequena|Kilogramos
+PAP-003|Papa fresca pequena|Kilogramos

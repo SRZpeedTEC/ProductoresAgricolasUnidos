@@ -4,7 +4,7 @@ import os
 import random
 from tkinter import messagebox
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.Manipulacion_txt import ManipulacionTXT
-from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima import AgregarMateriaPrima, EditarMateriaPrima, EliminarMateriaPrima
+from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima import AgregarMateriaPrima, EditarMateriaPrima, EliminarMateriaPrima, nuevoProducto
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.ManipulacionRegistros import ManipulacionRegistros
 
 class GestionMateriaPrima:
@@ -14,7 +14,7 @@ class GestionMateriaPrima:
         self.productos = self.manipular_txt.leer_productos()
         self.AgregarMateriaPrima = AgregarMateriaPrima.AgregarMateriaPrima(self.productos)
         self.EditarMateriaPrima = EditarMateriaPrima.EditarMateriaPrima(self.productos)
-        self.EliminarMateriaPrima = EliminarMateriaPrima.EliminarMateriaPrima(self.productos)
+        self.EliminarMateriaPrima = EliminarMateriaPrima.EliminarMateriaPrima(self.productos)     
         self.ManipularRegistros = ManipulacionRegistros(self.productos)
                                    
         Label(frame, text="Gestion Materias Primas", bg="white", font=("Times", 18, "bold")).pack(pady=10)
@@ -34,6 +34,9 @@ class GestionMateriaPrima:
         btn_eliminar = Button(controls_frame, text="Eliminar", command=self.eliminar_materiaPrima, bg="#FCC509", font=btn_font, width=15)
         btn_eliminar.grid(row=0, column=2, padx=5)
         
+        btn_agregar_nuevo_producto = Button(controls_frame, text="Nuevo producto", command=nuevoProducto.AgregarNuevoProducto.agregar_nuevo_producto, bg="#FCC509", font=btn_font, width=15)
+        btn_agregar_nuevo_producto.grid(row=0, column=3, padx=5)
+        
         # Treeview para mostrar la materia prima
         columns = ("Código", "Descripción", "Cantidad")
         self.tree = ttk.Treeview(frame, columns=columns, show="headings", height=15)
@@ -49,15 +52,17 @@ class GestionMateriaPrima:
            
 
     def agregar_materiaPrima(self):
+        self.productos = self.manipular_txt.leer_productos()
         self.AgregarMateriaPrima.agregar_materia_prima(self.tree)
         
-
+    
     def editar_materiaPrima(self):
         self.EditarMateriaPrima.editar_materia_prima(self.tree)
-        
-        
-    def eliminar_materiaPrima(self):
+         
+    def eliminar_materiaPrima(self):      
         self.EliminarMateriaPrima.eliminar_materia_prima(self.tree)
+       
+    
         
 
 
