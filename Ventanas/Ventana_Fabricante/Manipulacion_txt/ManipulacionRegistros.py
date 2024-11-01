@@ -36,15 +36,16 @@ class ManipulacionRegistros():
         ManipulacionTXT.actualizar_materia_prima(registros)
     
     @classmethod
-    def agregar_registro(cls, codigo, descripcion, cantidad, unidad, ventana, tree):
+    def agregar_registro(cls, codigo, descripcion, cantidad, unidad, tree):
         
         registros = cls.registros
         if codigo in registros:
-            messagebox.showwarning("Advertencia", f"El producto con código {codigo} ya existe.")                 
+            return False               
         else:
             registros[codigo] = (descripcion, cantidad, unidad)
-            ManipulacionTXT.escribir_nuevo_producto(codigo, descripcion, cantidad, unidad, ventana)
+            ManipulacionTXT.escribir_nuevo_producto(codigo, descripcion, cantidad, unidad)
             ManipulacionRegistros.cargar_materia_prima(tree)
+            return True
             
              
     @classmethod

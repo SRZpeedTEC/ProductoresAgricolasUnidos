@@ -3,7 +3,6 @@ from tkinter import ttk
 import os
 import random
 from tkinter import messagebox
-from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima.GuardarMateriaPrima import GuardarMateriaPrima
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.ManipulacionRegistros import ManipulacionRegistros
 
 
@@ -34,7 +33,16 @@ class AgregarNuevoProducto:
         ent_unidad = Entry(ventana_agregar)
         ent_unidad.pack(pady=5)
 
-        Button(ventana_agregar, text="Guardar", command=lambda: ManipulacionRegistros.agregar_registro(ent_codigo.get() ,ent_descripcion.get(), 0.0, ent_unidad.get(), ventana_agregar, tree)).pack(pady=10)
+        Button(ventana_agregar, text="Guardar", command=lambda: guardar()).pack(pady=10)
         
-        
+        def guardar():
+            if not ent_codigo.get() or not ent_descripcion.get() or not ent_unidad.get():
+                messagebox.showerror("Error", "Todos los campos deben estar llenos")
+            else:
+                if ManipulacionRegistros.agregar_registro(ent_codigo.get(), ent_descripcion.get(), 0.0, ent_unidad.get(), tree):           
+                    messagebox.showinfo("Exito", "Producto agregado correctamente")
+                    ventana_agregar.destroy()
+                else:
+                    messagebox.showerror("Error", "El producto ya existe")
+                
     

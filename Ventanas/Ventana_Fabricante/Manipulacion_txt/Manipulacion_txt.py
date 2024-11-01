@@ -42,14 +42,12 @@ class ManipulacionTXT(ABC):
                 
                 
     @classmethod        
-    def escribir_nuevo_producto(cls, codigo_producto, descripcion_producto, cantidad, unidad_medida, ventana):
+    def escribir_nuevo_producto(cls, codigo_producto, descripcion_producto, cantidad, unidad_medida):
         path_materia_prima = cls.path_materia_prima_fabrica
         
         with open(path_materia_prima, "a") as file:
             try:    
-                file.write(f"{codigo_producto}|{descripcion_producto}|{cantidad}|{unidad_medida}\n")
-                ventana.destroy()
-            
+                file.write(f"{codigo_producto}|{descripcion_producto}|{cantidad}|{unidad_medida}\n")                    
             except Exception as e:
                 messagebox.showerror("Error", f"Error al guardar el producto: {e}")
                 
