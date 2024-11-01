@@ -4,7 +4,7 @@ import os
 import random
 from tkinter import messagebox
 from Ventanas.Ventana_Fabricante.Funciones_GestionMateriaPrima.GuardarMateriaPrima import GuardarMateriaPrima
-from Ventanas.Ventana_Fabricante.Manipulacion_txt.ManipulacionRegistros import ManipulacionTXT
+from Ventanas.Ventana_Fabricante.Manipulacion_txt.ManipulacionRegistros import ManipulacionRegistros
 
 
 class AgregarNuevoProducto:
@@ -12,8 +12,7 @@ class AgregarNuevoProducto:
     
     
     @staticmethod      
-    def agregar_nuevo_producto():
-        manipulador_txt = ManipulacionTXT()
+    def agregar_nuevo_producto(tree):       
         ventana_agregar = Toplevel()
         ventana_agregar.title("Agregar Materia Prima")
         ventana_agregar.geometry("300x400")       
@@ -35,7 +34,7 @@ class AgregarNuevoProducto:
         ent_unidad = Entry(ventana_agregar)
         ent_unidad.pack(pady=5)
 
-        Button(ventana_agregar, text="Guardar", command=lambda: manipulador_txt.escribir_nuevo_producto(ent_codigo.get() ,ent_descripcion.get(), ent_unidad.get(), ventana_agregar)).pack(pady=10)
+        Button(ventana_agregar, text="Guardar", command=lambda: ManipulacionRegistros.agregar_registro(ent_codigo.get() ,ent_descripcion.get(), 0.0, ent_unidad.get(), ventana_agregar, tree)).pack(pady=10)
         
         
     

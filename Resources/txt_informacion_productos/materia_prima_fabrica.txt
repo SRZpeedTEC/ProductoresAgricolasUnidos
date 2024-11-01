@@ -1,0 +1,16 @@
+PAP-001|Papa fresca|23.0|Kilogramos
+TOM-001|Tomate fresco|19.0|Kilogramos
+TOM-002|Tomate fresco grande|50.0|Kilogramos
+TOM-003|Tomate fresco pequeño|25.0|Kilogramos
+SAL-003|Sal|4.0|Gramos
+OLI-001|Aceite vegetal|12.0|Litros
+AGU-001|Agua|0.0|Litros
+PRE-001|Preservantes|0.0|Gramos
+EMP-001|Empaque para chips (Paquete 200g)|0.0|Unidades
+EMP-002|Empaque para chips (Paquete 500g)|0.0|Unidades
+EMP-003|Botella plástica para salsa (500ml)|0.0|Unidades
+EMP-004|Tapa para botella plástica (500ml)|0.0|Unidades
+EMP-005|Botella plástica para salsa (1L)|0.0|Unidades
+EMP-006|Tapa para botella plástica (1L)|0.0|Unidades
+EMP-007|Lata para salsa de tomate (400g)|0.0|Unidades
+EMP-008|Lata para salsa de tomate (1kg)|0.0|Unidades

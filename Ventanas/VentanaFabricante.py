@@ -45,7 +45,7 @@ class VentanaPrincipalFabricante:
         btn_ver_procesados = Button(self.nav_frame, text="Ver Lotes Procesados", command=self.mostrar_lotes_procesados, bg="#eeeaea", font=btn_font, width=20)
         btn_ver_procesados.pack(pady=10)
         
-        btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=self.mostrar_maestro_articulos, bg="#eeeaea", font=btn_font, width=20)
+        btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=lambda:self.mostrar_maestro_articulos(), bg="#eeeaea", font=btn_font, width=20)
         btn_maestro_articulos.pack(pady=10)
 
         btn_volver_login = Button(self.nav_frame, text="Volver al Login", command=self.volver_login, bg="#eeeaea", font=btn_font, width=20)
