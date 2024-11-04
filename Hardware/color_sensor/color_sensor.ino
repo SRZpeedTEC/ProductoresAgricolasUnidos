@@ -5,14 +5,24 @@ const int S2 = 6;
 const int S3 = 7;
 const int sensorOut = 8;
 
+// Pines para los LEDs
+const int ledPapa = 9;
+const int ledTomate = 10;
+const int ledDesconocido = 11;
+
 void setup() {
-  // Configuración de los pines como salidas
+  // Configuración de los pines del sensor como salidas
   pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
   pinMode(sensorOut, INPUT);
-  
+
+  // Configuración de los pines de los LEDs como salidas
+  pinMode(ledPapa, OUTPUT);
+  pinMode(ledTomate, OUTPUT);
+  pinMode(ledDesconocido, OUTPUT);
+
   Serial.begin(9600);
 
   // Configura el sensor a alta frecuencia de salida
@@ -42,13 +52,23 @@ void loop() {
   Serial.print(" Azul: ");
   Serial.println(blue);
 
+  // Apagar todos los LEDs al inicio del ciclo
+  digitalWrite(ledPapa, LOW);
+  digitalWrite(ledTomate, LOW);
+  digitalWrite(ledDesconocido, LOW);
+
   // Condiciones para identificar tomate y papa (ajusta estos valores tras la calibración)
-  if (red > 200 && green < 30 && blue < 30) {
+  if (red < 100 && green > 150 && blue > 100) {
     Serial.println("Tomate detectado");
- // } else if (red < 150 && green < 150 && blue < 150) {
- //   Serial.println("Papa detectada");
-  } else {
+    digitalWrite(ledTomate, HIGH);  // Enciende el LED del tomate
+  } 
+  else if (red < 100 && green < 150 && blue < 150) {
+    Serial.println("Papa detectada");
+    digitalWrite(ledPapa, HIGH);    // Enciende el LED de la papa
+  } 
+  else {
     Serial.println("Objeto desconocido");
+    digitalWrite(ledDesconocido, HIGH); // Enciende el LED del objeto desconocido
   }
 
   delay(500); // Retardo antes de la siguiente lectura
