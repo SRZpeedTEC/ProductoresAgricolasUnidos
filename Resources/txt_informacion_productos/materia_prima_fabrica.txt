@@ -7,7 +7,7 @@ OLI-001|Aceite vegetal|12.0|Litros
 AGU-001|Agua|0.0|Litros
 PRE-001|Preservantes|0.0|Gramos
 EMP-001|Empaque para chips (Paquete 200g)|0.0|Unidades
-EMP-002|Empaque para chips (Paquete 500g)|0.0|Unidades
+EMP-002|Empaque para chips (Paquete 500g)|2.0|Unidades
 EMP-003|Botella plástica para salsa (500ml)|0.0|Unidades
 EMP-004|Tapa para botella plástica (500ml)|0.0|Unidades
 EMP-005|Botella plástica para salsa (1L)|0.0|Unidades

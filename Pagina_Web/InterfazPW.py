@@ -4,6 +4,9 @@ from tkinter.font import Font
 from tkinter.font import BOLD
 import Utiles.Genericos as genericos
 from PIL import ImageTk, Image
+from Pagina_Web.Funciones.cargar_productos import CargarProducto
+from Pagina_Web.Funciones.obtener_productos import Obtener_productos
+from Pagina_Web.Funciones.buscar_producto import buscarProductos
 
 class InterfazWeb():
     
@@ -79,7 +82,10 @@ class InterfazWeb():
         for categoria in categorias:
             btn_categoria = Button(sidebar_frame, text=categoria, font=Font(family='Times', size=16), background='#e8dede', command=lambda c=categoria: self.ver_categoria(c))
             btn_categoria.pack(fill=X, pady=10, padx=10)
-            
+        
+        btn_deshacer_filtro = Button(sidebar_frame, text="Sin filtros", font=Font(family='Times', size=16), background='#e8dede', command=lambda : self.cargar_productos())
+        btn_deshacer_filtro.pack(fill=X, pady=10, padx=10) 
+                 
         logo_empresa = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))       
         lbllogo = Label(sidebar_frame, image=logo_empresa, bg='#c16767')
         lbllogo.image = logo_empresa
@@ -117,42 +123,6 @@ class InterfazWeb():
         # Aquí puedes cargar los productos
         self.cargar_productos()
         
-    def cargar_productos(self):
-        # Ejemplo de lista de productos
-        productos = [
-            {"nombre": "Producto 1", "precio": "$10", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 2", "precio": "$20", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 3", "precio": "$30", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 4", "precio": "$40", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 5", "precio": "$50", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 6", "precio": "$60", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 7", "precio": "$70", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 8", "precio": "$80", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            # Puedes agregar más productos si lo deseas
-        ]
-
-        for idx, producto in enumerate(productos):
-            frame_producto = Frame(self.product_frame, bd=2, relief=RIDGE)
-            frame_producto.grid(row=idx // 4, column=idx % 4, padx=20, pady=10)
-
-            # Cargar imagen del producto
-            try:
-                img = ImageTk.PhotoImage(Image.open(producto["imagen"]).resize((150, 150)))
-            except:
-                img = ImageTk.PhotoImage(Image.new('RGB', (150, 150), color='gray'))
-
-            lbl_imagen = Label(frame_producto, image=img)
-            lbl_imagen.image = img  # Mantener referencia
-            lbl_imagen.pack()
-
-            lbl_nombre = Label(frame_producto, text=producto["nombre"])
-            lbl_nombre.pack()
-
-            lbl_precio = Label(frame_producto, text=producto["precio"], fg="green")
-            lbl_precio.pack()
-
-            btn_agregar = Button(frame_producto, text="Agregar al Carrito", command=lambda p=producto: self.agregar_al_carrito(p))
-            btn_agregar.pack(pady=5)
             
     def ver_carrito(self):
         messagebox.showinfo("Carrito", "Esta funcionalidad está en desarrollo.")
@@ -172,11 +142,18 @@ class InterfazWeb():
         Registrar_Cliente()
         
     def buscar_productos(self):
-        termino = self.buscar_var.get()
-        messagebox.showinfo("Buscar", f"Buscando productos que coincidan con: {termino}")
+        buscarProductos.buscar_productos(self)
+        
+    def cargar_productos(self):   
+        self.productos = Obtener_productos.ObtenerProductos()   
+        CargarProducto.mostrar_productos(self, self.productos)
         
     def ver_categoria(self, categoria):
-        messagebox.showinfo("Categoría", f"Mostrando productos de la categoría: {categoria}")
+        self.productos_filtrados = {}
+        for nombre, detalles in self.productos.items():
+            if detalles['categoria'].lower() == categoria.lower():
+                self.productos_filtrados[nombre] = detalles
+        CargarProducto.mostrar_productos(self, self.productos_filtrados)
         
     def agregar_al_carrito(self, producto):
         messagebox.showinfo("Agregar al Carrito", f"{producto['nombre']} ha sido agregado al carrito.")
