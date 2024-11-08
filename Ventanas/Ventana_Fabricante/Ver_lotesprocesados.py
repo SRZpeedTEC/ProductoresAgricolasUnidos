@@ -16,20 +16,21 @@ class VerLotesProcesados:
         frame_tree.pack(fill=BOTH, expand=True)
 
         # Definir las columnas del Treeview
-        columns = ("Lote", "TOM-001", "TOM-002", "TOM-003", "PAP-001")
+        column = ("Lote") # , "TOM-001", "TOM-002", "TOM-003", "PAP-001"
 
         # Crear el Treeview
-        tree = ttk.Treeview(frame_tree, columns=columns, show="headings", height=15)
+        tree = ttk.Treeview(frame_tree, columns=column, show="headings", height=15)
 
-        # Configurar las columnas y encabezados
+        
         tree.heading("Lote", text="ID del Lote")
+        '''
         tree.heading("TOM-001", text="Tomates Frescos kg")
         tree.heading("TOM-002", text="Tomates Frescos Grande kg")
         tree.heading("TOM-003", text="Tomates Frescos Pequeño kg")
         tree.heading("PAP-001", text="Papas Frescas")
-
-        for col in columns:
-            tree.column(col, width=150, anchor=CENTER)
+        '''
+       
+        tree.column(column, width=150, anchor=CENTER)
 
         # Crear una Scrollbar vertical y asociarla al Treeview
         scrollbar_vertical = Scrollbar(frame_tree, orient=VERTICAL, command=tree.yview)
@@ -52,20 +53,8 @@ class VerLotesProcesados:
         if os.path.exists("Resources/txt_lotes/lotes_procesados.txt"):
             with open("Resources/txt_lotes/lotes_procesados.txt", "r") as file:
                 for line in file:
-                    if line.strip():
-                        partes = line.strip().split(':', 1)
-                        if len(partes) == 2:
-                            lote_id = partes[0]
-                            informacion_procesamiento = partes[1].split(", ")
-                            detalles_columna = {"TOM-001": 0, "TOM-002": 0, "TOM-003": 0, "PAP-001": 0}
-                            
-                            for detalle in informacion_procesamiento:
-                                key, value = detalle.split(": ")
-                                key = key.strip()
-                                value = int(value.strip().replace("Kilogramos", ""))
-                                if key in detalles_columna:
-                                    detalles_columna[key] = value
-                            
-                            tree.insert("", "end", values=(lote_id, detalles_columna["TOM-001"], detalles_columna["TOM-002"], detalles_columna["TOM-003"], detalles_columna["PAP-001"]))
+                    if line.strip():                       
+                        lote_id = line.strip()                                                    
+                        tree.insert("", "end", values=(lote_id)) # detalles_columna["TOM-001"], detalles_columna["TOM-002"], detalles_columna["TOM-003"], detalles_columna["PAP-001"]
         else:
             Label(tree, text="No hay lotes procesados aún.", bg="white", font=("Times", 12)).pack(pady=10)
