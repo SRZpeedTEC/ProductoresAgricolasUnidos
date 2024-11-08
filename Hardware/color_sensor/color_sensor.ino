@@ -7,19 +7,14 @@ const int sensorOut = 8;
 
 // Pines para los LEDs
 const int ledPapa = 9;
-const int ledTomate = 10;
-const int ledDesconocido = 11;
-
-// Pin de control de velocidad del motor DC
-const int motorPin = 3; // Conectar a la base del transistor TIP120 con una resistencia de 220Ω
+const int ledTomateRojo = 10;
+const int ledTomateVerde = 11;
+const int ledTomateAmarillo = 12;
 
 // Variables para el tiempo de encendido de los LEDs
 unsigned long ledTimer = 0;
 const unsigned long ledDuration = 3000; // Duración en milisegundos (3 segundos)
 bool ledActive = false;
-
-// Variable para controlar la velocidad del motor (0 a 255)
-int velocidadMotor = 250; // Ajusta este valor entre 0 (apagado) y 255 (máxima velocidad)
 
 void setup() {
   // Configuración de los pines del sensor como salidas
@@ -31,11 +26,9 @@ void setup() {
 
   // Configuración de los pines de los LEDs como salidas
   pinMode(ledPapa, OUTPUT);
-  pinMode(ledTomate, OUTPUT);
-  pinMode(ledDesconocido, OUTPUT);
-
-  // Configuración del pin del motor como salida
-  pinMode(motorPin, OUTPUT);
+  pinMode(ledTomateRojo, OUTPUT);
+  pinMode(ledTomateVerde, OUTPUT);
+  pinMode(ledTomateAmarillo, OUTPUT);
 
   Serial.begin(9600);
 
@@ -44,11 +37,7 @@ void setup() {
   digitalWrite(S1, LOW);
 }
 
-void controlarMotor(int velocidad) {
-  // Ajusta la velocidad del motor en el rango de 0 a 255
-  analogWrite(motorPin, velocidad);
-}
-
+// Función para obtener la frecuencia del color filtrado
 int getColorFrequency(int s2State, int s3State) {
   digitalWrite(S2, s2State);
   digitalWrite(S3, s3State);
@@ -74,41 +63,39 @@ void loop() {
   if (ledActive && (millis() - ledTimer >= ledDuration)) {
     // Apaga todos los LEDs y resetea el estado
     digitalWrite(ledPapa, LOW);
-    digitalWrite(ledTomate, LOW);
-    digitalWrite(ledDesconocido, LOW);
+    digitalWrite(ledTomateRojo, LOW);
+    digitalWrite(ledTomateVerde, LOW);
+    digitalWrite(ledTomateAmarillo, LOW);
     ledActive = false;
   }
 
-  // Condiciones para identificar tomate, papa y tomate verde
+  // Condiciones para identificar cada tipo de objeto
   if (!ledActive) { // Solo procesa si no hay un LED encendido actualmente
-    if (red < 100 && green > 150 && blue > 100) {
+    if (red < 100 && green > 150 && blue > 100) { // Tomate rojo
       Serial.println("Tomate rojo detectado");
-      digitalWrite(ledTomate, HIGH);
+      digitalWrite(ledTomateRojo, HIGH);
       ledActive = true;
       ledTimer = millis();
     } 
-    else if (red < 100 && green < 150 && blue < 150) {
+    else if (red < 100 && green < 150 && blue < 150) { // Papa
       Serial.println("Papa detectada");
       digitalWrite(ledPapa, HIGH);
       ledActive = true;
       ledTimer = millis();
     } 
-    else if (green > 200 && red > 100 && blue < 150) { 
+    else if (green > 200 && red > 100 && blue < 150) { // Tomate verde
       Serial.println("Tomate verde detectado");
-      digitalWrite(ledTomate, HIGH);
+      digitalWrite(ledTomateVerde, HIGH);
       ledActive = true;
       ledTimer = millis();
     } 
-    else {
-      Serial.println("Objeto desconocido");
-      digitalWrite(ledDesconocido, HIGH);
+    else if (red > 150 && green > 150 && blue < 100) { // Tomate amarillo
+      Serial.println("Tomate amarillo detectado");
+      digitalWrite(ledTomateAmarillo, HIGH);
       ledActive = true;
       ledTimer = millis();
     }
   }
-
-  // Control de la velocidad del motor
-  controlarMotor(velocidadMotor); // Ajusta la velocidad del motor aquí
 
   delay(500); // Retardo antes de la siguiente lectura
 }
