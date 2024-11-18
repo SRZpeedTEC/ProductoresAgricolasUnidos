@@ -1,0 +1,2 @@
+Papas medianas|500$|30.0|kg|./Resources/Imgs/logoProvisional.png|Papas
+Tomates Frescos|1000$|5.0|kg|./Resources/Imgs/logoProvisional.png|Tomates

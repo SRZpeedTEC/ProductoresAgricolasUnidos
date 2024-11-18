@@ -2,11 +2,15 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
+from tkinter import Toplevel, IntVar
 import Utiles.Genericos as genericos
 from PIL import ImageTk, Image
+from Pagina_Web.Funciones.guardar_en_carrito import GuardarEnCarrito
 from Pagina_Web.Funciones.cargar_productos import CargarProducto
 from Pagina_Web.Funciones.obtener_productos import Obtener_productos
 from Pagina_Web.Funciones.buscar_producto import buscarProductos
+from Pagina_Web.Funciones.actualizar_productos import ActualizarProducto
+
 
 class InterfazWeb():
     
@@ -156,4 +160,70 @@ class InterfazWeb():
         CargarProducto.mostrar_productos(self, self.productos_filtrados)
         
     def agregar_al_carrito(self, producto):
-        messagebox.showinfo("Agregar al Carrito", f"{producto['nombre']} ha sido agregado al carrito.")
+        if not isinstance(producto, dict):
+            messagebox.showerror("Error", "El producto seleccionado no es válido.")
+            return
+
+        # Crear ventana emergente (popup)
+        popup = Toplevel(self.Interfaz)
+        popup.title("Agregar al Carrito")
+        popup.geometry("300x250")
+        popup.resizable(width=0, height=0)
+
+        # Mostrar información del producto
+        lbl_producto = Label(popup, text=f"Producto: {producto['descripcion']}", font=('Arial', 12, 'bold'))
+        lbl_producto.pack(pady=10)
+
+        # Procesar el precio para convertirlo en número
+        try:
+            precio_unitario = float(producto['precio'].replace('$', '').strip())
+        except ValueError:
+            messagebox.showerror("Error", f"Precio inválido: {producto['precio']}")
+            popup.destroy()
+            return
+
+        lbl_precio = Label(popup, text=f"Precio: ${precio_unitario:.2f} x {producto['unidad']}", font=('Arial', 10))
+        lbl_precio.pack()
+
+        # Variable para la cantidad seleccionada
+        cantidad_var = IntVar(value=1)
+
+        lbl_cantidad = Label(popup, text="Cantidad:", font=('Arial', 10))
+        lbl_cantidad.pack(pady=5)
+
+        spinbox_cantidad = Spinbox(popup, from_=1, to=int(producto['cantidad']), textvariable=cantidad_var, width=5)
+        spinbox_cantidad.pack()
+
+        # Label para mostrar el total
+        lbl_total = Label(popup, text=f"Total: ${precio_unitario * cantidad_var.get():.2f}", font=('Arial', 12, 'bold'), fg="blue")
+        lbl_total.pack(pady=10)
+
+        # Actualizar el total dinámicamente
+        def actualizar_total(*args):
+            cantidad = cantidad_var.get()
+            try:
+                cantidad = int(cantidad)
+                total = precio_unitario * cantidad
+                lbl_total.config(text=f"Total: ${total:.2f}")
+            except ValueError:
+                lbl_total.config(text="Total: $0.00")
+
+        # Vincular el cambio de cantidad al cálculo del total
+        cantidad_var.trace_add("write", actualizar_total)
+
+        # Botón para confirmar
+        btn_confirmar = Button(popup, text="Añadir al Carrito", command=lambda: self.confirmar_agregar_carrito(popup, producto, cantidad_var.get()))
+        btn_confirmar.pack(pady=10)
+
+
+
+    def confirmar_agregar_carrito(self, popup, producto, cantidad):
+        popup.destroy()  # Cerrar la ventana emergente
+        ActualizarProducto.actualizar_producto(self,producto,cantidad)
+        messagebox.showinfo("Carrito", f"{cantidad} x {producto['descripcion']} se han agregado al carrito.")
+        GuardarEnCarrito.guardar_en_carrito(self,producto,cantidad)
+        self.cargar_productos()
+        
+        
+
+    

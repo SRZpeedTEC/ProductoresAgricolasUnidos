@@ -14,7 +14,7 @@ class CargarProducto:
     
             
     def mostrar_productos(self, productos):
-        
+        # Limpiar el frame de productos
         for widget in self.product_frame.winfo_children():
             widget.destroy()
 
@@ -35,14 +35,22 @@ class CargarProducto:
             lbl_nombre = Label(frame_producto, text=producto)
             lbl_nombre.pack()
 
-            lbl_precio = Label(frame_producto, text=productos[producto]['precio'], fg="green")
+            lbl_precio = Label(frame_producto, text=f"Precio: ${productos[producto]['precio']}", fg="green")
             lbl_precio.pack()
             
-            lbl_cantidad = Label(frame_producto, text=f"Disponible: {productos[producto]['cantidad']} {productos[producto]['unidad']}")
-            lbl_cantidad.pack()            
+            if productos[producto]['cantidad'] > 0:
+                lbl_cantidad = Label(frame_producto, text=f"Disponible: {productos[producto]['cantidad']} {productos[producto]['unidad']}")
+                lbl_cantidad.pack()
 
-            btn_agregar = Button(frame_producto, text="Agregar al Carrito", command=lambda p=producto: self.agregar_al_carrito(p))
-            btn_agregar.pack(pady=5)
+                
+                btn_agregar = Button(frame_producto, text="Agregar al carrito", command=lambda p=productos[producto]: self.agregar_al_carrito(p))
+                btn_agregar.pack(pady=5)
+            else:
+                 lbl_cantidad = Label(frame_producto, text="Producto AGOTADO")
+                 lbl_cantidad.pack()         
+
+           
+
     
     
     

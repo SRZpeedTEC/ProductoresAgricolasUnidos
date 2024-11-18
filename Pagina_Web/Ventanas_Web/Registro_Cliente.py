@@ -86,6 +86,17 @@ class Registrar_Cliente:
             with open('./Resources/clientes.txt', 'a', encoding='utf-8', newline='') as archivo:
                 archivo.write(f"{usuario_nuevo},{contrasena_nueva}\n")
 
+            # Construir la ruta completa del archivo
+            ruta_archivo = os.path.join('./Resources/carritos', f"carrito_{usuario_nuevo}.txt")
+            
+            try:
+                # Crear el archivo si no existe
+                with open(ruta_archivo, 'w') as archivo:           
+                    print(f"Archivo creado en: {ruta_archivo}")
+
+            except Exception as e:
+                print(f"Error al crear el carrito: {e}")
+
             messagebox.showinfo("Éxito", "El usuario ha sido creado exitosamente")
             # Limpiar los campos de entrada
             self.usuario.delete(0, END)
