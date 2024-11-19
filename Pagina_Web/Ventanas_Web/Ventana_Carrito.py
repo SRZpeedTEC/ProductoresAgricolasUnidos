@@ -135,7 +135,12 @@ class VentanaCarrito:
             self.guardar_factura(factura_texto, total_costo)
 
             # Vaciar el carrito
-            self.vaciar_carrito()
+            try:
+                with open(self.carrito_archivo, "w", encoding="utf-8") as archivo:
+                    archivo.write("")
+                self.carrito.clear()
+            except IOError as e:
+                raise IOError(f"No se pudo vaciar el carrito: {e}")
 
             # Cerrar la ventana actual
             self.ventana.destroy()
@@ -144,7 +149,6 @@ class VentanaCarrito:
             messagebox.showerror("Error", f"Ocurrió un error al confirmar la compra:\n{str(e)}")
 
     def generar_factura(self):
-        """Genera el texto de la factura y calcula el costo total."""
         factura_texto = ""
         total_costo = 0
 
@@ -166,7 +170,6 @@ class VentanaCarrito:
         return factura_texto, total_costo
 
     def guardar_factura(self, factura_texto, total_costo):
-        """Guarda la factura en el archivo correspondiente."""
         try:
             cliente_nombre = self.cliente[0] if self.cliente else 'Anonimo'
             factura_guardada = f"{cliente_nombre}, {factura_texto.replace(chr(10), ' | ')} | Total: ${total_costo:.2f}\n"
@@ -177,11 +180,5 @@ class VentanaCarrito:
         except IOError as e:
             raise IOError(f"No se pudo guardar la factura: {e}")
 
-    def vaciar_carrito(self):
-        """Vacía el contenido del carrito y limpia el archivo correspondiente."""
-        try:
-            with open(self.carrito_archivo, "w", encoding="utf-8") as archivo:
-                archivo.write("")
-            self.carrito.clear()
-        except IOError as e:
-            raise IOError(f"No se pudo vaciar el carrito: {e}")
+    
+        
