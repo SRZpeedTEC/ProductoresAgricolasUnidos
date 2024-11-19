@@ -128,8 +128,9 @@ class InterfazWeb():
         self.cargar_productos()
         
             
-    def ver_carrito(self):
-        messagebox.showinfo("Carrito", "Esta funcionalidad está en desarrollo.")
+    def ver_carrito(self):   
+        from Pagina_Web.Ventanas_Web.Ventana_Carrito import VentanaCarrito
+        VentanaCarrito(self.Interfaz, self.cliente, self)  # Pasar self.Interfaz como parent
         
     def iniciar_sesion(self):
         self.Interfaz.destroy()

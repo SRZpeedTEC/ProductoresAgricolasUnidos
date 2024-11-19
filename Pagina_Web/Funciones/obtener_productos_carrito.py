@@ -8,27 +8,35 @@ from abc import ABC, abstractmethod
 
 class Obtener_productos_carrito:
     @staticmethod
-    def ObtenerProductosCarrito():
-            
-            productos = {}
-            path_productos = "Resources/txt_pagina_web/productos.txt"
-            
-            if os.path.exists(path_productos):
-                with open(path_productos, "r") as file:
-                    for line in file:
-                        if line.strip():
-                            partes = line.strip().split("|")
-                            if len(partes) == 7:
-                                NombreProducto = partes[0].strip()
-                                descripcion = partes[1].strip()                          
-                                precio = partes[2].strip()
-                                cantidad = partes[3].strip()
-                                unidad = partes[4].strip()
-                                imagen = partes[5].strip()    
-                                categoria = partes[6].strip()                        
-                                try:
-                                    cantidad = float(cantidad)
-                                    productos[NombreProducto] = {'descripcion': descripcion, 'precio': precio, 'cantidad': cantidad, 'unidad': unidad, 'imagen': imagen, 'categoria': categoria}                              
-                                except ValueError:
-                                    messagebox.showwarning("Advertencia", f"La cantidad no es válida en la línea: {line}")
-            return productos
+    def ObtenerProductosCarrito(path_Carrito):
+        productos = {}
+        
+        # Verificar si el archivo existe
+        if os.path.exists(path_Carrito):
+            with open(path_Carrito, "r") as file:
+                for line in file:
+                    if line.strip():  # Ignorar líneas vacías
+                        partes = line.strip().split("|")
+                        if len(partes) == 6:  # Ajustado a 6 partes
+                            NombreProducto = partes[0].strip()
+                            precio = partes[1].strip()
+                            cantidad = partes[2].strip()
+                            unidad = partes[3].strip()
+                            imagen = partes[4].strip()
+                            categoria = partes[5].strip()
+                            
+                            try:
+                                cantidad = float(cantidad)  # Convertir cantidad a número
+                                productos[NombreProducto] = {
+                                    'precio': precio,
+                                    'cantidad': cantidad,
+                                    'unidad': unidad,
+                                    'imagen': imagen,
+                                    'categoria': categoria
+                                }
+                            except ValueError:
+                                messagebox.showwarning("Advertencia", f"La cantidad no es válida en la línea: {line}")
+        else:
+            messagebox.showwarning("Archivo no encontrado", f"No se encontró el archivo: {path_Carrito}")
+        
+        return productos
