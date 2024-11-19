@@ -27,8 +27,6 @@ class VentanaCarrito:
 
         self.crear_widgets()
 
-    
-
     def crear_widgets(self):
         # Contenedor para la barra superior
         barra_superior = Frame(self.ventana, bg="#B90518", height=50)
@@ -49,6 +47,8 @@ class VentanaCarrito:
         # Leer y mostrar productos
         self.carrito = Obtener_productos_carrito.ObtenerProductosCarrito(self.carrito_archivo)
         total_costo = 0
+        factura_texto = ""  # Aquí almacenaremos el texto de la factura
+
         if self.carrito:
             for idx, (descripcion, producto) in enumerate(self.carrito.items()):  # Iterar sobre los elementos del diccionario
                 precio = float(producto['precio'].replace('$', '').strip())  # Convertir el precio
@@ -56,26 +56,21 @@ class VentanaCarrito:
                 total_producto = precio * cantidad  # Calcular el total del producto
                 total_costo += total_producto  # Sumar al total general
 
-                lbl_producto = Label(
-                    productos_frame,
-                    text=f"{idx + 1}. {descripcion} - {cantidad} {producto['unidad']} x ${precio:.2f} = ${total_producto:.2f}",
-                    font=Font(family='Arial', size=12), bg='#fcfcfc'
-                )
-                lbl_producto.pack(anchor='w', pady=5)
-        else:
-            lbl_producto = Label(
-                productos_frame,
-                text="Tu carrito está vacío.",
-                font=Font(family='Arial', size=14, weight=BOLD), bg='#fcfcfc'
-            )
-            lbl_producto.pack(anchor='center', pady=10)
+                # Crear el texto de la factura
+                factura_texto += f"{idx + 1}. {descripcion} - {cantidad} {producto['unidad']} x ${precio:.2f} = ${total_producto:.2f}\n"
 
-        # Mostrar total
-        lbl_total = Label(
-            self.ventana, text=f"Total: ${total_costo:.2f}",
-            font=Font(family='Arial', size=16, weight=BOLD), fg='#B90518', bg='#fcfcfc'
+            # Agregar el total
+            factura_texto += f"\nTotal: ${total_costo:.2f}\n"
+        else:
+            factura_texto = "Tu carrito está vacío.\n"
+
+        # Crear área de texto para mostrar la factura
+        lbl_factura = Label(
+            self.ventana,
+            text=factura_texto,
+            font=Font(family='Arial', size=12), bg='#fcfcfc', justify=CENTER, anchor=N
         )
-        lbl_total.pack(pady=10)
+        lbl_factura.pack(padx=10, pady=10, fill=X)
 
         # Botones de acción
         botones_frame = Frame(self.ventana, bg='#fcfcfc')
@@ -103,7 +98,6 @@ class VentanaCarrito:
         )
         btn_vaciar.pack(side=LEFT, padx=10, pady=10, anchor='w')
 
-
     def vaciar_carrito(self):
         # Iterar sobre los productos del carrito antes de vaciarlo
         if self.carrito:
@@ -122,16 +116,72 @@ class VentanaCarrito:
         self.ventana.destroy()
 
     def confirmar_compra(self):
+        # Verificar si el carrito está vacío
         if not self.carrito:
             messagebox.showinfo("Carrito", "Tu carrito está vacío.")
             return
 
-        # Mostrar mensaje de confirmación
-        messagebox.showinfo("Compra Confirmada", "Tu compra ha sido confirmada con éxito.")
-        
-        # Vaciar el archivo del carrito
-        with open(self.carrito_archivo, "w") as archivo:
-            archivo.write("")
-        
-        # Cerrar la ventana
-        self.ventana.destroy()
+        # Crear la factura y calcular el total
+        try:
+            factura_texto, total_costo = self.generar_factura()
+
+            # Mostrar mensaje de confirmación al usuario
+            messagebox.showinfo(
+                "Compra Confirmada",
+                f"Tu compra ha sido confirmada con éxito.\n¡Gracias por tu compra!\n\nTotal: ${total_costo:.2f}"
+            )
+
+            # Guardar la factura
+            self.guardar_factura(factura_texto, total_costo)
+
+            # Vaciar el carrito
+            self.vaciar_carrito()
+
+            # Cerrar la ventana actual
+            self.ventana.destroy()
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Ocurrió un error al confirmar la compra:\n{str(e)}")
+
+    def generar_factura(self):
+        """Genera el texto de la factura y calcula el costo total."""
+        factura_texto = ""
+        total_costo = 0
+
+        for idx, (descripcion, producto) in enumerate(self.carrito.items()):
+            try:
+                precio = float(producto['precio'].replace('$', '').strip())
+                cantidad = producto['cantidad']
+                total_producto = precio * cantidad
+                total_costo += total_producto
+
+                factura_texto += (
+                    f"{idx + 1}. {descripcion} - {cantidad} {producto['unidad']} x "
+                    f"${precio:.2f} = ${total_producto:.2f}\n"
+                )
+            except (ValueError, KeyError) as e:
+                raise ValueError(f"Error procesando el producto '{descripcion}': {e}")
+
+        factura_texto += f"\nTotal: ${total_costo:.2f}"
+        return factura_texto, total_costo
+
+    def guardar_factura(self, factura_texto, total_costo):
+        """Guarda la factura en el archivo correspondiente."""
+        try:
+            cliente_nombre = self.cliente[0] if self.cliente else 'Anonimo'
+            factura_guardada = f"{cliente_nombre}, {factura_texto.replace(chr(10), ' | ')} | Total: ${total_costo:.2f}\n"
+
+            with open("Resources/facturas.txt", "a", encoding="utf-8") as archivo_facturas:
+                archivo_facturas.write(factura_guardada)
+
+        except IOError as e:
+            raise IOError(f"No se pudo guardar la factura: {e}")
+
+    def vaciar_carrito(self):
+        """Vacía el contenido del carrito y limpia el archivo correspondiente."""
+        try:
+            with open(self.carrito_archivo, "w", encoding="utf-8") as archivo:
+                archivo.write("")
+            self.carrito.clear()
+        except IOError as e:
+            raise IOError(f"No se pudo vaciar el carrito: {e}")

@@ -80,17 +80,23 @@ class InterfazWeb():
     def crear_barra_lateral(self):
         sidebar_frame = Frame(self.Interfaz, bg="#c16767", width=100, padx=20)
         sidebar_frame.pack(side=LEFT, fill=Y)
-        
-        # Ejemplo de botones de categorías
+
+        # Botones de categorías
         categorias = ["Tomates", "Papas", "Chips", "Salsas", "Otros"]
         for categoria in categorias:
             btn_categoria = Button(sidebar_frame, text=categoria, font=Font(family='Times', size=16), background='#e8dede', command=lambda c=categoria: self.ver_categoria(c))
             btn_categoria.pack(fill=X, pady=10, padx=10)
-        
-        btn_deshacer_filtro = Button(sidebar_frame, text="Sin filtros", font=Font(family='Times', size=16), background='#e8dede', command=lambda : self.cargar_productos())
-        btn_deshacer_filtro.pack(fill=X, pady=10, padx=10) 
-                 
-        logo_empresa = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))       
+
+        btn_deshacer_filtro = Button(sidebar_frame, text="Sin filtros", font=Font(family='Times', size=16), background='#e8dede', command=lambda: self.cargar_productos())
+        btn_deshacer_filtro.pack(fill=X, pady=10, padx=10)
+
+        # Botón "Ver Historial"
+        btn_ver_historial = Button(sidebar_frame, text="Ver Historial", font=Font(family='Times', size=16), background='yellow', command=self.ver_historial)
+        btn_ver_historial.pack(fill=X, pady=10, padx=10, side=BOTTOM)
+
+
+        # Logo de la empresa
+        logo_empresa = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))
         lbllogo = Label(sidebar_frame, image=logo_empresa, bg='#c16767')
         lbllogo.image = logo_empresa
         lbllogo.pack(side=BOTTOM, pady=20)
@@ -225,6 +231,56 @@ class InterfazWeb():
         GuardarEnCarrito.guardar_en_carrito(self,producto,cantidad)
         self.cargar_productos()
         
-        
+    def ver_historial(self):
+        if self.cliente is None:
+            messagebox.showerror("Error", "Debes iniciar sesión para ver tu historial.")
+            return
+
+        # Crear ventana Toplevel
+        historial_window = Toplevel(self.Interfaz)
+        nombre_cliente = self.cliente[0]
+        historial_window.title(f"Historial de Facturas de {nombre_cliente}")
+        historial_window.geometry("600x400")
+        historial_window.resizable(False, False)
+
+        # Contenedor para mostrar el historial
+        frame_historial = Frame(historial_window, bg="#B90518")  # Cambiar el fondo del frame principal
+        frame_historial.pack(fill=BOTH, expand=True, padx=10, pady=10)
+
+        # Etiqueta del título
+        lbl_titulo = Label(frame_historial, text=f"Historial de Facturas de {nombre_cliente}", font=('Arial', 16, 'bold'), bg="#B90518")
+        lbl_titulo.pack(pady=10)
+
+        try:
+            # Leer el archivo de facturas
+            with open("Resources/facturas.txt", "r") as archivo_facturas:
+                facturas = archivo_facturas.readlines()
+
+            # Filtrar las facturas del cliente actual
+            facturas_cliente = [factura for factura in facturas if factura.startswith(nombre_cliente)]
+
+            if not facturas_cliente:
+                lbl_no_facturas = Label(frame_historial, text="No tienes facturas en el historial.", font=('Arial', 12), bg="#ffffff", fg="#555555")
+                lbl_no_facturas.pack(pady=20)
+            else:
+                # Mostrar las facturas en un texto con scroll
+                text_historial = Text(frame_historial, wrap=WORD, height=15, font=('Arial', 10), bg="#f5f5f5")
+                text_historial.pack(fill=BOTH, expand=True)
+
+                for factura in facturas_cliente:
+                    # Remover el nombre del cliente y duplicado del total
+                    partes_factura = factura.split(", ", 1)[1].rsplit("| Total: ", 1)
+                    detalles = partes_factura[0].strip()
+                    total = partes_factura[1].strip()
+
+                    # Insertar detalles y total
+                    text_historial.insert(END, f"{detalles}\n")
+                    text_historial.insert(END, f"Total: {total}\n\n")
+
+                text_historial.config(state=DISABLED)  # Hacer el texto de solo lectura
+        except FileNotFoundError:
+            messagebox.showerror("Error", "El archivo de facturas no se encontró.")
+
+
 
     

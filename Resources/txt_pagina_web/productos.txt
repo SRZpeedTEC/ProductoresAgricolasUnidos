@@ -1,2 +1,2 @@
-Tomates Maduros|Tomates Frescos|1000$|100.0|kg|./Resources/Imgs/logoProvisional.png|Tomates
-Papas Medianas|Papas medianas|500$|202.0|kg|./Resources/Imgs/logoProvisional.png|Papas
+Tomates Maduros|Tomates Frescos|1000$|8.0|kg|./Resources/Imgs/logoProvisional.png|Tomates
+Papas Medianas|Papas medianas|500$|9.0|kg|./Resources/Imgs/logoProvisional.png|Papas
