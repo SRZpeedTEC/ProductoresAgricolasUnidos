@@ -2,3 +2,4 @@ Salsa Tomate 400g|Salsa Deliciosa|10|1|Litros|./Resources/Imgs/logoProvisional.p
 Chips De Papa|Chips de Papa Frita|50|1|Unidad|./Resources/Imgs/logoProvisional.png|Papa
 Agua|Agua Fresca|2|1|Litros|./Resources/Imgs/logoProvisional.png|Otros
 Aceite|Aceite de Oliva|70.0|1|Litro|./Resources/Imgs/logoProvisional.png|Otros
+Salsa Cherry|Salsa Cherry|500.0|1|Litro|./Resources/Imgs/logoProvisional.png|Tomates

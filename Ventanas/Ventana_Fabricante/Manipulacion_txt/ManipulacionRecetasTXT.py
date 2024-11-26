@@ -7,19 +7,24 @@ class ManipulacionRecetasTXT:
 
 
     @classmethod
+    @classmethod
     def validar_ingredientes(cls, ingredientes):
         """
-        Valida que los ingredientes tengan el formato correcto (código:cantidad).
+        Valida que los ingredientes tengan el formato correcto (código, cantidad).
         """
         for ingrediente in ingredientes:
             if len(ingrediente) != 2:
                 return False
+            codigo, cantidad = ingrediente
+            if not codigo or not cantidad:
+                return False
             try:
-                # Asegurarse de que la cantidad sea un número entero
-                int(ingrediente[1])
+                # Asegurarse de que la cantidad sea un número entero o flotante
+                float(cantidad)
             except ValueError:
                 return False
         return True
+
 
     @classmethod
     def leer_recetas(cls):

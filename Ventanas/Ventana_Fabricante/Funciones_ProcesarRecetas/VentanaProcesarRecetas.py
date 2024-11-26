@@ -55,7 +55,7 @@ class VentanaProcesarRecetas:
         """
         try:
             # Verificar si el archivo de recetas existe
-            if not self.path_recetas.exists():
+            if self.path_recetas == None:
                 messagebox.showwarning("Advertencia", "El archivo de recetas no existe.")
                 return
 
@@ -89,7 +89,7 @@ class VentanaProcesarRecetas:
                         messagebox.showwarning("Advertencia", f"Ingrediente '{ing}' tiene un formato incorrecto.")
 
             # Verificar si el archivo de materia prima existe
-            if not self.path_materia_prima.exists():
+            if self.path_materia_prima == None:
                 messagebox.showwarning("Advertencia", "El archivo de materia prima no existe.")
                 return
 
@@ -202,12 +202,7 @@ class VentanaProcesarRecetas:
         try:
             cantidad_a_procesar = int(self.cantidad_a_procesar_entry.get())
             cantidad_total = self.cantidad_procesada * cantidad_a_procesar  # Cantidad total procesada
-
-            # Crear directorio si no existe
-            self.path_productos_listos.parent.mkdir(parents=True, exist_ok=True)
-            # Crear el archivo si no existe
-            self.path_productos_listos.touch(exist_ok=True)
-
+       
             # Escribir en el archivo
             with open(self.path_productos_listos, "a", encoding="utf-8") as file:
                 file.write(f"{self.receta_id}|{self.nombre_receta}|{cantidad_total}|{self.unidad}\n")

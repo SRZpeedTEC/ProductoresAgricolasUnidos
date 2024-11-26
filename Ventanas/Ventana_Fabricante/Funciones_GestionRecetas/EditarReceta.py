@@ -146,10 +146,10 @@ class EditarReceta:
         nuevos_ingredientes = []
         for item in self.ingredientes_tree.get_children():
             valores = self.ingredientes_tree.item(item)["values"]
-            nuevos_ingredientes.append(f"{valores[0]}:{valores[1]}")
+            nuevos_ingredientes.append((valores[0], valores[1]))  # Almacenar como tuplas
 
         # Formatear los ingredientes para el archivo
-        ingredientes_str = ";".join(nuevos_ingredientes)
+        ingredientes_str = ";".join([f"{codigo}:{cantidad}" for codigo, cantidad in nuevos_ingredientes])
 
         # Actualizar el archivo
         try:
@@ -167,9 +167,6 @@ class EditarReceta:
             # Escribir las recetas actualizadas en el archivo
             with open(self.path_recetas, "w", encoding="utf-8") as file:
                 file.writelines(recetas)
-
-            # Actualizar el Treeview en la ventana principal
-            self.tree.item(self.tree.selection()[0], values=(nuevo_id, nuevo_nombre, nueva_cantidad, nueva_unidad))
 
             # Mostrar mensaje de éxito y cerrar la ventana de edición
             messagebox.showinfo("Éxito", "Receta actualizada con éxito.")

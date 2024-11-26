@@ -142,33 +142,20 @@ class GestionRecetas:
 
         # Leer las recetas desde el archivo para obtener los ingredientes más recientes
         try:
-            with open(self.path_recetas, "r", encoding="utf-8") as file:
-                recetas = file.readlines()
+            recetas = ManipulacionRecetasTXT.leer_recetas()
 
             # Buscar la receta con el ID seleccionado
-            receta_encontrada = next((receta.strip().split("|") for receta in recetas if receta.split("|")[0] == receta_id), None)
+            receta_encontrada = next((receta for receta in recetas if receta[0] == receta_id), None)
 
             if not receta_encontrada:
                 messagebox.showerror("Error", f"No se pudo encontrar la receta con ID '{receta_id}' en el archivo.")
                 return
 
             # Obtener el nombre y los ingredientes de la receta encontrada
-            _, _, _, _, ingredientes_str = receta_encontrada
+            _, nombre_receta, _, _, ingredientes_list = receta_encontrada
 
-            # Convertir la cadena de ingredientes en una lista de tuplas
-            ingredientes_list = []
-            if ingredientes_str:
-                ingredientes_raw = ingredientes_str.split(";")
-                for ingrediente in ingredientes_raw:
-                    if ":" in ingrediente:
-                        try:
-                            codigo, cantidad = ingrediente.split(":")
-                            ingredientes_list.append((codigo.strip(), cantidad.strip()))
-                        except ValueError:
-                            messagebox.showwarning("Advertencia", f"Formato inválido para el ingrediente: {ingrediente}")
-
-            # Llamar a la función `ver_ingredientes` pasando la lista de ingredientes correctamente
-            receta = (receta_id, valores[1], ingredientes_list)
+            # Llamar a la función `ver_ingredientes` pasando la lista de ingredientes
+            receta = (receta_id, nombre_receta, ingredientes_list)
             ver_ingredientes(receta)
 
         except FileNotFoundError:
