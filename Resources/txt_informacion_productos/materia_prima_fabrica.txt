@@ -1,17 +1,17 @@
-PAP-001|Papa fresca|16|Kilogramos
-TOM-001|Tomate fresco|10|Kilogramos
-TOM-002|Tomate fresco grande|50|Kilogramos
-TOM-003|Tomate fresco pequeno|23|Kilogramos
-SAL-003|Sal|0|Gramos
-OLI-001|Aceite vegetal|0|Litros
-AGU-001|Agua|2|Litros
-PRE-001|Preservantes|4|Gramos
-EMP-001|Empaque para chips (Paquete 200g)|4|Unidades
-EMP-002|Empaque para chips (Paquete 500g)|5|Unidades
-EMP-003|Botella plastica para salsa (500ml)|3|Unidades
-EMP-004|Tapa para botella plastica (500ml)|4|Unidades
-EMP-005|Botella plastica para salsa (1L)|4|Unidades
-EMP-006|Tapa para botella plastica (1L)|0|Unidades
-EMP-007|Lata para salsa de tomate (400g)|4|Unidades
-EMP-008|Lata para salsa de tomate (1kg)|4|Unidades
-TOM-004|Tomate Cherry|2|Kilogramos
+PAP-001|Papa fresca|16.0|Kilogramos
+TOM-001|Tomate fresco|8.0|Kilogramos
+TOM-002|Tomate fresco grande|50.0|Kilogramos
+TOM-003|Tomate fresco pequeno|23.0|Kilogramos
+SAL-003|Sal|3.0|Gramos
+OLI-001|Aceite vegetal|4.0|Litros
+AGU-001|Agua|4.0|Litros
+PRE-001|Preservantes|4.0|Gramos
+EMP-001|Empaque para chips (Paquete 200g)|4.0|Unidades
+EMP-002|Empaque para chips (Paquete 500g)|5.0|Unidades
+EMP-003|Botella plastica para salsa (500ml)|4.0|Unidades
+EMP-004|Tapa para botella plastica (500ml)|2.0|Unidades
+EMP-005|Botella plastica para salsa (1L)|0.0|Unidades
+EMP-006|Tapa para botella plastica (1L)|6.0|Unidades
+EMP-007|Lata para salsa de tomate (400g)|4.0|Unidades
+EMP-008|Lata para salsa de tomate (1kg)|13.0|Unidades
+TOM-004|Tomate Cherry|2.0|Kilogramos

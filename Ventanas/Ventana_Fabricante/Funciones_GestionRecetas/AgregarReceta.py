@@ -36,13 +36,7 @@ def agregar_receta(self):
     Label(frame_produccion, text="Cantidad a Producir:", font=("Helvetica", 12), bg="#e6f2ff").grid(row=1, column=0, padx=10, pady=10, sticky="w")
     cantidad_producir = Entry(frame_produccion, width=20, font=("Helvetica", 12))
     cantidad_producir.grid(row=1, column=1, padx=10, pady=10)
-
-    # Función para validar que solo se ingrese un número entero
-    def validar_entero(valor):
-        if not valor.isdigit():
-            messagebox.showwarning("Advertencia", "Por favor, ingresa una cantidad válida (entero).")
-            return False
-        return True
+  
 
     # Frame para la lista de Materia Prima Disponible
     frame_materia_prima = Frame(ventana_receta, bg="#e6f2ff")
@@ -111,11 +105,7 @@ def agregar_receta(self):
         codigo, nombre, disponible, unidad = materia_prima[index]
         cantidad_ingresada = cantidad.get()
 
-        # Validar que la cantidad ingresada es un número entero
-        if not validar_entero(cantidad_ingresada):
-            return
-
-        cantidad_ingresada = int(cantidad_ingresada)
+        cantidad_ingresada = float(cantidad_ingresada)
 
         if cantidad_ingresada > int(disponible):
             messagebox.showwarning("Advertencia", "La cantidad ingresada excede la disponible.")
@@ -160,7 +150,7 @@ def agregar_receta(self):
             valores = ingredientes_tree.item(item, "values")
             try:
                 codigo = valores[0]
-                cantidad = int(valores[2])  # Convertir la cantidad a entero
+                cantidad = valores[2]
                 ingredientes.append((codigo, cantidad))
             except ValueError:
                 messagebox.showwarning(

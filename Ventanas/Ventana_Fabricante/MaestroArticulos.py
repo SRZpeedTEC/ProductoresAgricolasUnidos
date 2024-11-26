@@ -47,6 +47,7 @@ class GestionMateriaPrima:
             self.tree.column(col, width=150, anchor=CENTER)
         
         # Cargar datos
+        
         ManipulacionRegistros.cargar_materia_prima(self.tree)
            
 

@@ -6,12 +6,14 @@ from tkinter import messagebox
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.Manipulacion_txt import ManipulacionTXT
 class ManipulacionRegistros():
     
-    registros = ManipulacionTXT.leer_materia_prima()
+    def actualizar_lectura_materia_prima():
+        registros = ManipulacionTXT.leer_materia_prima()
+        return registros
     
     @classmethod
     def cargar_materia_prima(cls, tree):
     # Limpiar el Treeview
-        registros = cls.registros
+        registros = ManipulacionRegistros.actualizar_lectura_materia_prima()
         for item in tree.get_children():
             tree.delete(item)                        
         if registros:
@@ -23,7 +25,7 @@ class ManipulacionRegistros():
     @classmethod
     def actualizar_registro(cls, codigo, cantidad_nueva, sumar=True):
                 
-        registros = cls.registros
+        registros = ManipulacionRegistros.actualizar_lectura_materia_prima()
         if codigo in registros:
             descripcion, cantidad_existente, unidad = registros[codigo]  # CANTIDAD DE MATERIA Ej: Registros[TOM-001](descripcion, cantidad, unidad)   
             if sumar:
@@ -38,7 +40,7 @@ class ManipulacionRegistros():
     @classmethod
     def agregar_registro(cls, codigo, descripcion, cantidad, unidad, tree):
         
-        registros = cls.registros
+        registros = ManipulacionRegistros.actualizar_lectura_materia_prima()
         if codigo in registros:
             return False               
         else:
@@ -51,7 +53,7 @@ class ManipulacionRegistros():
     @classmethod
     def eliminar_registro(cls, codigo):
         
-        registros = cls.registros 
+        registros = ManipulacionRegistros.actualizar_lectura_materia_prima()
         
         if codigo in registros:
             del registros[codigo]

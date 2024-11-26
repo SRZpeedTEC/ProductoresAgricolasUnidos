@@ -8,15 +8,10 @@ import os
 class ColocarProductos:
     def __init__(self, parent):
         # Rutas a los archivos
-        self.path_productos_listos = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/productos_listos.txt")
-        self.path_productos_tienda = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_pagina_web/productos.txt")
+        self.path_productos_listos = "Resources/txt_recetas/productos_listos.txt"
+        self.path_productos_tienda = "Resources/txt_pagina_web/productos.txt"
         self.default_image_path = "./Resources/Imgs/logoProvisional.png"  # Imagen predeterminada
-        
-        # Crear archivos si no existen
-        self.path_productos_listos.parent.mkdir(parents=True, exist_ok=True)
-        self.path_productos_listos.touch(exist_ok=True)
-        self.path_productos_tienda.parent.mkdir(parents=True, exist_ok=True)
-        self.path_productos_tienda.touch(exist_ok=True)
+             
 
         # Variables de descripción, categoría y ruta de imagen
         self.descripcion = None

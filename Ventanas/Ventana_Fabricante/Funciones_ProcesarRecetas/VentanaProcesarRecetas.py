@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from pathlib import Path
+import os
 
 class VentanaProcesarRecetas:
     def __init__(self, root, receta_id, nombre_receta, cantidad_procesada, unidad):
@@ -83,7 +83,7 @@ class VentanaProcesarRecetas:
                 if len(partes_ingrediente) == 2:
                     try:
                         codigo = partes_ingrediente[0].strip()
-                        cantidad = int(partes_ingrediente[1].strip())  # Validar solo enteros
+                        cantidad = float(partes_ingrediente[1].strip()) # Validar solo enteros
                         ingredientes.append((codigo, cantidad))
                     except ValueError:
                         messagebox.showwarning("Advertencia", f"Ingrediente '{ing}' tiene un formato incorrecto.")
@@ -102,7 +102,7 @@ class VentanaProcesarRecetas:
                     if len(partes) == 4:
                         codigo = partes[0].strip()
                         descripcion = partes[1].strip()
-                        cantidad = int(float(partes[2].strip()))  # Convertir a entero
+                        cantidad = float(partes[2].strip())  # Convertir a entero
                         unidad = partes[3].strip()
                         materia_prima[codigo] = cantidad
                         materia_prima_info[codigo] = (descripcion, unidad)
@@ -198,16 +198,48 @@ class VentanaProcesarRecetas:
     def guardar_producto_listo(self):
         """
         Guarda los datos de la receta procesada en el archivo de productos listos.
+        Si el producto ya existe, actualiza su cantidad.
         """
         try:
             cantidad_a_procesar = int(self.cantidad_a_procesar_entry.get())
             cantidad_total = self.cantidad_procesada * cantidad_a_procesar  # Cantidad total procesada
-       
-            # Escribir en el archivo
-            with open(self.path_productos_listos, "a", encoding="utf-8") as file:
-                file.write(f"{self.receta_id}|{self.nombre_receta}|{cantidad_total}|{self.unidad}\n")
+
+            # Leer productos existentes
+            productos_existentes = {}
+            if os.path.exists(self.path_productos_listos):
+                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
+                    for line in file:
+                        partes = line.strip().split("|")
+                        if len(partes) >= 4:
+                            id_producto = partes[0]
+                            nombre_producto = partes[1]
+                            cantidad_producto = float(partes[2])  # Puede ser decimal
+                            unidad_producto = partes[3]
+                            productos_existentes[id_producto] = {
+                                'nombre': nombre_producto,
+                                'cantidad': cantidad_producto,
+                                'unidad': unidad_producto
+                            }
+
+            # Actualizar o agregar producto
+            if self.receta_id in productos_existentes:
+                # Actualizar cantidad
+                productos_existentes[self.receta_id]['cantidad'] += cantidad_total
+            else:
+                # Agregar nuevo producto
+                productos_existentes[self.receta_id] = {
+                    'nombre': self.nombre_receta,
+                    'cantidad': cantidad_total,
+                    'unidad': self.unidad
+                }
+
+            # Escribir productos actualizados en el archivo
+            with open(self.path_productos_listos, "w", encoding="utf-8") as file:
+                for id_producto, datos in productos_existentes.items():
+                    file.write(f"{id_producto}|{datos['nombre']}|{datos['cantidad']}|{datos['unidad']}\n")
 
             messagebox.showinfo("Éxito", f"Receta procesada: {cantidad_total} {self.unidad} de {self.nombre_receta}")
 
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar la receta procesada: {e}")
+

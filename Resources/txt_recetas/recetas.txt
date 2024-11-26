@@ -4,3 +4,4 @@
 4|Lata Tomate|1|Unidad|EMP-008:1;TOM-001:2
 5|Aceite|1|Litro|OLI-001:1;EMP-003:2;EMP-004:1
 6|Salsa Cherry|1|Litro|OLI-001:2;EMP-006:1;TOM-004:2
+7|r2w4|1|Kilogramos|AGU-001:0.5
