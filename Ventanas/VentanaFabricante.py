@@ -5,6 +5,9 @@ import Utiles.Genericos as gnr
 from PIL import ImageTk, Image
 from Utiles.Genericos import centrar_ventana
 from Ventanas.Ventana_Fabricante import Procesar, Ver_lotesprocesados, MaestroArticulos
+from Ventanas.Ventana_Fabricante.GestionRecetas import GestionRecetas
+from Ventanas.Ventana_Fabricante.ProcesarRecetas import ProcesarRecetas
+from Ventanas.Ventana_Fabricante.ColocarProductos import ColocarProductos  # Importar el nuevo archivo
 
 class VentanaPrincipalFabricante:
 
@@ -47,11 +50,32 @@ class VentanaPrincipalFabricante:
         
         btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=lambda:self.mostrar_maestro_articulos(), bg="#eeeaea", font=btn_font, width=20)
         btn_maestro_articulos.pack(pady=10)
+        
+        btn_receta = Button(self.nav_frame, text="Gestionar Recetas", command=lambda:self.mostrar_recetas(), bg="#eeeaea", font=btn_font, width=20)
+        btn_receta.pack(pady=10)
+
+        btn_procesar_receta = Button(self.nav_frame, text="Procesar Recetas", command=lambda:self.procesar_recetas(), bg="#eeeaea", font=btn_font, width=20)
+        btn_procesar_receta.pack(pady=10)
+
+        # Botón nuevo: Colocar Productos Disponibles en Tienda
+        btn_colocar_productos = Button(
+            self.nav_frame,
+            text="Colocar Productos en Tienda",
+            command=self.colocar_productos_en_tienda,
+            bg="#eeeaea",
+            font=btn_font,
+            width=20
+        )
+        btn_colocar_productos.pack(pady=10)
 
         btn_volver_login = Button(self.nav_frame, text="Volver al Login", command=self.volver_login, bg="#eeeaea", font=btn_font, width=20)
         btn_volver_login.pack(pady=10)
-        
-        
+
+    def colocar_productos_en_tienda(self):
+        # Limpiar y mostrar la funcionalidad de colocar productos
+        self.limpiar_frame_contenido()
+        ColocarProductos(self.content_frame)
+
     def limpiar_frame_contenido(self):
         # Limpiar el frame de contenido antes de mostrar algo nuevo
         for widget in self.content_frame.winfo_children():
@@ -79,6 +103,14 @@ class VentanaPrincipalFabricante:
         # Crear la vista de maestro de artículos en el content_frame
         self.limpiar_frame_contenido()
         MaestroArticulos.GestionMateriaPrima(self.content_frame)
+    
+    def mostrar_recetas(self):
+        self.limpiar_frame_contenido()
+        GestionRecetas(self.content_frame)
+
+    def procesar_recetas(self):
+        self.limpiar_frame_contenido()
+        ProcesarRecetas(self.content_frame)
 
     def volver_login(self):
         # Volver a la pantalla de login

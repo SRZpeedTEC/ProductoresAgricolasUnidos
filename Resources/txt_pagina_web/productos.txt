@@ -1,2 +1,4 @@
-Tomates Maduros|Tomates Frescos|1000$|3.0|kg|./Resources/Imgs/logoProvisional.png|Tomates
-Papas Medianas|Papas medianas|500$|5.0|kg|./Resources/Imgs/logoProvisional.png|Papas
+Salsa Tomate 400g|Salsa Deliciosa|10|1|Litros|./Resources/Imgs/logoProvisional.png|Tomate
+Chips De Papa|Chips de Papa Frita|50|1|Unidad|./Resources/Imgs/logoProvisional.png|Papa
+Agua|Agua Fresca|2|1|Litros|./Resources/Imgs/logoProvisional.png|Otros
+Aceite|Aceite de Oliva|70.0|1|Litro|./Resources/Imgs/logoProvisional.png|Otros
