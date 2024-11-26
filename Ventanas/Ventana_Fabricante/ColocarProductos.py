@@ -1,20 +1,26 @@
-from tkinter import *
-from tkinter import ttk
+from tkinter import * 
+from tkinter import ttk, filedialog
 from tkinter import simpledialog
 from pathlib import Path
 from tkinter import messagebox
-
+import os
 
 class ColocarProductos:
     def __init__(self, parent):
         # Rutas a los archivos
-        self.path_productos_listos = "Resources/txt_recetas/productos_listos.txt"
-        self.path_productos_tienda = "Resources/txt_pagina_web/productos.txt"
+        self.path_productos_listos = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/productos_listos.txt")
+        self.path_productos_tienda = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_pagina_web/productos.txt")
+        self.default_image_path = "./Resources/Imgs/logoProvisional.png"  # Imagen predeterminada
         
-        
-        # Variables de descripción y categoría
+        # Crear archivos si no existen
+        self.path_productos_listos.parent.mkdir(parents=True, exist_ok=True)
+        self.path_productos_listos.touch(exist_ok=True)
+        self.path_productos_tienda.parent.mkdir(parents=True, exist_ok=True)
+        self.path_productos_tienda.touch(exist_ok=True)
+
+        # Variables de descripción, categoría y ruta de imagen
         self.descripcion = None
-        self.categoria = None
+        self.image_path = self.default_image_path
 
         # Título de la ventana
         Label(parent, text="Productos Disponibles en Tienda", font=("Times", 18, "bold"), bg="white").pack(pady=10)
@@ -46,8 +52,27 @@ class ColocarProductos:
         # Botón para agregar descripción
         Button(frame_precio, text="Agregar Descripción", command=self.agregar_descripcion, bg="#2196F3", font=("Times", 12), fg="white").grid(row=0, column=2, padx=10)
 
-        # Botón para agregar categoría
-        Button(frame_precio, text="Agregar Categoría", command=self.agregar_categoria, bg="#2196F3", font=("Times", 12), fg="white").grid(row=0, column=3, padx=10)
+        # Categoría mediante Combobox
+        Label(frame_precio, text="Categoría:", bg="white", font=("Times", 12)).grid(row=0, column=3, padx=5)
+        self.categoria_combobox = ttk.Combobox(
+            frame_precio,
+            values=["Tomates", "Papas", "Chips", "Salsas", "Otros"],
+            font=("Times", 12),
+            state="readonly",
+            width=12
+        )
+        self.categoria_combobox.grid(row=0, column=4, padx=5)
+        self.categoria_combobox.set("Seleccione")  # Valor inicial
+
+        # Sección para cargar imagen
+        frame_imagen = Frame(parent, bg="white")
+        frame_imagen.pack(pady=10)
+
+        Label(frame_imagen, text="Imagen del Producto:", bg="white", font=("Times", 12)).grid(row=0, column=0, padx=5)
+        self.image_label = Label(frame_imagen, text="Imagen predeterminada", bg="white", font=("Times", 10), fg="gray")
+        self.image_label.grid(row=0, column=1, padx=5)
+
+        Button(frame_imagen, text="Seleccionar Imagen", command=self.cargar_imagen, bg="#2196F3", font=("Times", 12), fg="white").grid(row=0, column=2, padx=10)
 
         # Botón para colocar en tienda
         Button(parent, text="Colocar en Tienda", command=self.colocar_en_tienda, bg="#4CAF50", font=("Times", 12), fg="white").pack(pady=10)
@@ -90,15 +115,10 @@ class ColocarProductos:
                 messagebox.showwarning("Advertencia", "Por favor, selecciona un producto.")
                 return
 
-            # Obtener los datos del producto seleccionado
-            item = self.tree.item(seleccion[0])
-            valores = item["values"]  # ID, Nombre, Cantidad, Unidad
-            producto_id, nombre, _, _ = valores
-
             # Solicitar la descripción
             self.descripcion = simpledialog.askstring(
                 "Agregar Descripción",
-                f"Ingrese la descripción para el producto '{nombre}':"
+                "Ingrese la descripción para el producto seleccionado:"
             )
 
             if self.descripcion:
@@ -109,34 +129,30 @@ class ColocarProductos:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo agregar la descripción: {e}")
 
-    def agregar_categoria(self):
+    def cargar_imagen(self):
         """
-        Agrega una categoría al producto seleccionado.
+        Permite seleccionar una imagen desde el explorador de archivos.
         """
         try:
-            # Verificar que se seleccionó un producto
-            seleccion = self.tree.selection()
-            if not seleccion:
-                messagebox.showwarning("Advertencia", "Por favor, selecciona un producto.")
-                return
-
-            # Solicitar la categoría
-            self.categoria = simpledialog.askstring(
-                "Agregar Categoría",
-                "Ingrese la categoría para el producto:"
+            file_path = filedialog.askopenfilename(
+                title="Seleccionar Imagen",
+                filetypes=[("Archivos de Imagen", "*.png *.jpg *.jpeg *.bmp")]
             )
 
-            if self.categoria:
-                messagebox.showinfo("Categoría Agregada", f"Categoría guardada: {self.categoria}")
+            if file_path:
+                self.image_path = file_path
+                self.image_label.config(text=os.path.basename(file_path), fg="black")
             else:
-                messagebox.showwarning("Advertencia", "No se ingresó ninguna categoría.")
+                self.image_path = self.default_image_path
+                self.image_label.config(text="Imagen predeterminada", fg="gray")
 
         except Exception as e:
-            messagebox.showerror("Error", f"No se pudo agregar la categoría: {e}")
+            messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
 
     def colocar_en_tienda(self):
         """
-        Coloca el producto seleccionado en la tienda.
+        Coloca el producto seleccionado en la tienda, actualizando la cantidad si ya existe, 
+        y elimina el producto correspondiente de productos_listos.txt.
         """
         try:
             # Verificar que se seleccionó un producto
@@ -146,32 +162,116 @@ class ColocarProductos:
                 return
 
             # Verificar que todos los campos estén llenos
-            if not self.descripcion or not self.categoria or not self.entry_precio.get().strip():
+            if not self.descripcion or self.categoria_combobox.get() == "Seleccione" or not self.entry_precio.get().strip():
                 messagebox.showwarning("Advertencia", "Debe completar la descripción, categoría y precio antes de continuar.")
                 return
 
             # Obtener los datos del producto seleccionado
             item = self.tree.item(seleccion[0])
             valores = item["values"]  # ID, Nombre, Cantidad, Unidad
-            producto_id, nombre, cantidad, unidad = valores
+            producto_id, nombre, cantidad_disponible, unidad = valores
+            cantidad_disponible = int(cantidad_disponible)
 
-            # Obtener el precio
+            # Verificar precio
             precio = self.entry_precio.get().strip()
-            if not precio.replace(".", "").isdigit():
+            if not precio.isdigit():
                 messagebox.showerror("Error", "Por favor, ingresa un precio válido.")
                 return
 
-            precio = float(precio)
+            precio = int(precio)
 
-            # Ruta de la foto (puedes cambiarla según el proyecto)
-            foto = "./Resources/Imgs/logoProvisional.png"
+            # Ruta de la foto
+            foto = self.image_path
 
-            # Guardar en el archivo productos.txt
-            with open(self.path_productos_tienda, "a", encoding="utf-8") as file:
-                file.write(f"{nombre}|{self.descripcion}|{precio}|{cantidad}|{unidad}|{foto}|{self.categoria}\n")
+            # Leer el archivo de productos tienda
+            productos_tienda = []
+            if self.path_productos_tienda.exists():
+                with open(self.path_productos_tienda, "r", encoding="utf-8") as file:
+                    productos_tienda = file.readlines()
+
+            # Verificar si el producto ya existe en la tienda
+            producto_encontrado = None
+            for i, linea in enumerate(productos_tienda):
+                partes = linea.strip().split("|")
+                if len(partes) >= 7 and partes[0].strip() == nombre:  # Comparar por nombre del producto
+                    producto_encontrado = (i, partes)
+                    break
+
+            if producto_encontrado:
+                # Si el producto ya existe, preguntar cuánta cantidad agregar
+                indice, datos_producto = producto_encontrado
+                cantidad_actual = int(datos_producto[3])  # Cantidad actual en la tienda
+
+                # Pedir la cantidad a agregar
+                cantidad_a_agregar = simpledialog.askinteger(
+                    "Agregar Cantidad",
+                    f"El producto '{nombre}' ya existe en la tienda con {cantidad_actual} {unidad}. "
+                    "Ingrese la cantidad adicional que desea publicar:",
+                    minvalue=1,
+                    maxvalue=cantidad_disponible
+                )
+
+                if not cantidad_a_agregar:
+                    return
+
+                # Actualizar cantidad en el producto existente
+                datos_producto[3] = str(cantidad_actual + cantidad_a_agregar)
+                productos_tienda[indice] = "|".join(datos_producto) + "\n"
+
+                # Restar la cantidad publicada de productos listos
+                cantidad_disponible -= cantidad_a_agregar
+
+            else:
+                # Si el producto no existe, agregarlo como nuevo
+                cantidad_a_publicar = simpledialog.askinteger(
+                    "Cantidad a Publicar",
+                    f"El producto '{nombre}' no está en la tienda. Ingrese la cantidad a publicar:",
+                    minvalue=1,
+                    maxvalue=cantidad_disponible
+                )
+
+                if not cantidad_a_publicar:
+                    return
+
+                productos_tienda.append(
+                    f"{nombre}|{self.descripcion}|{precio}|{cantidad_a_publicar}|{unidad}|{foto}|{self.categoria_combobox.get()}\n"
+                )
+
+                # Restar la cantidad publicada de productos listos
+                cantidad_disponible -= cantidad_a_publicar
+
+            # Guardar los cambios en productos tienda
+            with open(self.path_productos_tienda, "w", encoding="utf-8") as file:
+                file.writelines(productos_tienda)
+
+            # Si ya no queda cantidad disponible, eliminar el producto de productos_listos.txt
+            if cantidad_disponible == 0:
+                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
+                    productos_listos = file.readlines()
+
+                with open(self.path_productos_listos, "w", encoding="utf-8") as file:
+                    for linea in productos_listos:
+                        if not linea.startswith(f"{producto_id}|"):
+                            file.write(linea)
+            else:
+                # Actualizar la cantidad disponible en productos_listos.txt
+                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
+                    productos_listos = file.readlines()
+
+                with open(self.path_productos_listos, "w", encoding="utf-8") as file:
+                    for linea in productos_listos:
+                        if linea.startswith(f"{producto_id}|"):
+                            partes = linea.strip().split("|")
+                            partes[2] = str(cantidad_disponible)
+                            file.write("|".join(partes) + "\n")
+                        else:
+                            file.write(linea)
+
+            # Actualizar el Treeview
+            self.cargar_productos()
 
             # Mostrar confirmación
-            messagebox.showinfo("Éxito", f"El producto '{nombre}' fue colocado en la tienda correctamente.")
+            messagebox.showinfo("Éxito", f"El producto '{nombre}' fue actualizado en la tienda correctamente.")
 
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo colocar el producto en tienda: {e}")
