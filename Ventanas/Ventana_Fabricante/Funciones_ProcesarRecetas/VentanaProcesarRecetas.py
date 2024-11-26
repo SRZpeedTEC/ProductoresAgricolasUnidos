@@ -213,7 +213,7 @@ class VentanaProcesarRecetas:
                         if len(partes) >= 4:
                             id_producto = partes[0]
                             nombre_producto = partes[1]
-                            cantidad_producto = float(partes[2])  # Puede ser decimal
+                            cantidad_producto = int(partes[2])  
                             unidad_producto = partes[3]
                             productos_existentes[id_producto] = {
                                 'nombre': nombre_producto,

@@ -5,3 +5,4 @@ santiroob, 1. Tomates Frescos - 2.0 kg x $1000.00 = $2000.00 | 2. Papas medianas
 pruebac, 1. Tomates Frescos - 3.0 kg x $1000.00 = $3000.00 |  | Total: $3000.00 | Total: $3000.00
 pruebac, 1. Papas medianas - 4.0 kg x $500.00 = $2000.00 |  | Total: $2000.00 | Total: $2000.00
 Anonimo, 1. Papas medianas - 1.0 kg x $500.00 = $500.00 |  | Total: $500.00 | Total: $500.00
+santi, 1. Agua Fresca - 1.0 Litros x $2.00 = $2.00 |  | Total: $2.00 | Total: $2.00

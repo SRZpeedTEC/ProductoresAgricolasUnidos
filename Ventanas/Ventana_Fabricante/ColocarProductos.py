@@ -1,7 +1,6 @@
 from tkinter import * 
 from tkinter import ttk, filedialog
 from tkinter import simpledialog
-from pathlib import Path
 from tkinter import messagebox
 import os
 
@@ -21,7 +20,7 @@ class ColocarProductos:
         Label(parent, text="Productos Disponibles en Tienda", font=("Times", 18, "bold"), bg="white").pack(pady=10)
 
         # Treeview para mostrar el contenido del archivo
-        columns = ("ID", "Nombre", "Cantidad", "Unidad")
+        columns = ("ID", "Nombre", "Cantidad", "Unidad", "En Tienda")
         self.tree = ttk.Treeview(parent, columns=columns, show="headings", height=8)  # Tamaño reducido
         self.tree.pack(fill=BOTH, expand=True, padx=10, pady=10)
 
@@ -30,11 +29,13 @@ class ColocarProductos:
         self.tree.heading("Nombre", text="Nombre")
         self.tree.heading("Cantidad", text="Cantidad")
         self.tree.heading("Unidad", text="Unidad")
+        self.tree.heading("En Tienda", text="En Tienda")
 
         self.tree.column("ID", width=100, anchor=CENTER)
         self.tree.column("Nombre", width=200, anchor=W)
         self.tree.column("Cantidad", width=100, anchor=CENTER)
         self.tree.column("Unidad", width=100, anchor=CENTER)
+        self.tree.column("En Tienda", width=100, anchor=CENTER)
 
         # Sección para ingresar precio
         frame_precio = Frame(parent, bg="white")
@@ -88,16 +89,33 @@ class ColocarProductos:
             with open(self.path_productos_listos, "r", encoding="utf-8") as file:
                 lineas = file.readlines()
 
+            # Leer los productos en tienda
+            productos_en_tienda = set()
+            if os.path.exists(self.path_productos_tienda):
+                with open(self.path_productos_tienda, "r", encoding="utf-8") as file:
+                    for linea in file:
+                        partes = linea.strip().split("|")
+                        if len(partes) >= 1:
+                            nombre_producto = partes[0].strip().lower()  # Usamos el nombre como identificador
+                            productos_en_tienda.add(nombre_producto)
+
             # Agregar las líneas al Treeview
             for linea in lineas:
                 partes = linea.strip().split("|")
-                if len(partes) == 4:  # Formato: ID|Nombre|Cantidad|Unidad
-                    self.tree.insert("", "end", values=(partes[0], partes[1], partes[2], partes[3]))
+                if len(partes) >= 4:  # Formato: ID|Nombre|Cantidad|Unidad
+                    producto_id = partes[0]
+                    nombre = partes[1]
+                    cantidad = partes[2]
+                    unidad = partes[3]
+                    en_tienda = "Sí" if nombre.lower() in productos_en_tienda else "No"
+                    self.tree.insert("", "end", values=(producto_id, nombre, cantidad, unidad, en_tienda))
 
         except FileNotFoundError:
             messagebox.showerror("Error", "El archivo productos_listos.txt no se encontró.")
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar los productos: {e}")
+
+
 
     def agregar_descripcion(self):
         """
@@ -145,10 +163,6 @@ class ColocarProductos:
             messagebox.showerror("Error", f"No se pudo cargar la imagen: {e}")
 
     def colocar_en_tienda(self):
-        """
-        Coloca el producto seleccionado en la tienda, actualizando la cantidad si ya existe, 
-        y elimina el producto correspondiente de productos_listos.txt.
-        """
         try:
             # Verificar que se seleccionó un producto
             seleccion = self.tree.selection()
@@ -156,31 +170,15 @@ class ColocarProductos:
                 messagebox.showwarning("Advertencia", "Por favor, selecciona un producto.")
                 return
 
-            # Verificar que todos los campos estén llenos
-            if not self.descripcion or self.categoria_combobox.get() == "Seleccione" or not self.entry_precio.get().strip():
-                messagebox.showwarning("Advertencia", "Debe completar la descripción, categoría y precio antes de continuar.")
-                return
-
             # Obtener los datos del producto seleccionado
             item = self.tree.item(seleccion[0])
-            valores = item["values"]  # ID, Nombre, Cantidad, Unidad
-            producto_id, nombre, cantidad_disponible, unidad = valores
-            cantidad_disponible = int(cantidad_disponible)
-
-            # Verificar precio
-            precio = self.entry_precio.get().strip()
-            if not precio.isdigit():
-                messagebox.showerror("Error", "Por favor, ingresa un precio válido.")
-                return
-
-            precio = int(precio)
-
-            # Ruta de la foto
-            foto = self.image_path
+            valores = item["values"]  # ID, Nombre, Cantidad, Unidad, En Tienda
+            producto_id, nombre, cantidad_disponible, unidad, en_tienda = valores
+            cantidad_disponible = int(float(cantidad_disponible))  # Convertir a entero
 
             # Leer el archivo de productos tienda
             productos_tienda = []
-            if self.path_productos_tienda.exists():
+            if os.path.exists(self.path_productos_tienda):
                 with open(self.path_productos_tienda, "r", encoding="utf-8") as file:
                     productos_tienda = file.readlines()
 
@@ -188,14 +186,14 @@ class ColocarProductos:
             producto_encontrado = None
             for i, linea in enumerate(productos_tienda):
                 partes = linea.strip().split("|")
-                if len(partes) >= 7 and partes[0].strip() == nombre:  # Comparar por nombre del producto
+                if len(partes) >= 1 and partes[0].strip().lower() == nombre.lower():  # Comparar por nombre del producto
                     producto_encontrado = (i, partes)
                     break
 
             if producto_encontrado:
-                # Si el producto ya existe, preguntar cuánta cantidad agregar
+                # Si el producto ya existe, solo pedir la cantidad a agregar
                 indice, datos_producto = producto_encontrado
-                cantidad_actual = int(datos_producto[3])  # Cantidad actual en la tienda
+                cantidad_actual = int(float(datos_producto[3]))  # Convertir a entero
 
                 # Pedir la cantidad a agregar
                 cantidad_a_agregar = simpledialog.askinteger(
@@ -206,7 +204,7 @@ class ColocarProductos:
                     maxvalue=cantidad_disponible
                 )
 
-                if not cantidad_a_agregar:
+                if cantidad_a_agregar is None:
                     return
 
                 # Actualizar cantidad en el producto existente
@@ -217,7 +215,19 @@ class ColocarProductos:
                 cantidad_disponible -= cantidad_a_agregar
 
             else:
-                # Si el producto no existe, agregarlo como nuevo
+                # Si el producto no existe, solicitar los campos adicionales
+                if not self.descripcion or self.categoria_combobox.get() == "Seleccione" or not self.entry_precio.get().strip():
+                    messagebox.showwarning("Advertencia", "Debe completar la descripción, categoría y precio antes de continuar.")
+                    return
+
+                # Verificar precio
+                try:
+                    precio = float(self.entry_precio.get().strip())
+                except ValueError:
+                    messagebox.showerror("Error", "Por favor, ingresa un precio válido.")
+                    return
+
+                # Pedir la cantidad a publicar
                 cantidad_a_publicar = simpledialog.askinteger(
                     "Cantidad a Publicar",
                     f"El producto '{nombre}' no está en la tienda. Ingrese la cantidad a publicar:",
@@ -225,11 +235,11 @@ class ColocarProductos:
                     maxvalue=cantidad_disponible
                 )
 
-                if not cantidad_a_publicar:
+                if cantidad_a_publicar is None:
                     return
 
                 productos_tienda.append(
-                    f"{nombre}|{self.descripcion}|{precio}|{cantidad_a_publicar}|{unidad}|{foto}|{self.categoria_combobox.get()}\n"
+                    f"{nombre}|{self.descripcion}|{precio}|{cantidad_a_publicar}|{unidad}|{self.image_path}|{self.categoria_combobox.get()}\n"
                 )
 
                 # Restar la cantidad publicada de productos listos
@@ -239,34 +249,47 @@ class ColocarProductos:
             with open(self.path_productos_tienda, "w", encoding="utf-8") as file:
                 file.writelines(productos_tienda)
 
-            # Si ya no queda cantidad disponible, eliminar el producto de productos_listos.txt
-            if cantidad_disponible == 0:
-                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
-                    productos_listos = file.readlines()
-
-                with open(self.path_productos_listos, "w", encoding="utf-8") as file:
-                    for linea in productos_listos:
-                        if not linea.startswith(f"{producto_id}|"):
-                            file.write(linea)
-            else:
-                # Actualizar la cantidad disponible en productos_listos.txt
-                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
-                    productos_listos = file.readlines()
-
-                with open(self.path_productos_listos, "w", encoding="utf-8") as file:
-                    for linea in productos_listos:
-                        if linea.startswith(f"{producto_id}|"):
-                            partes = linea.strip().split("|")
-                            partes[2] = str(cantidad_disponible)
-                            file.write("|".join(partes) + "\n")
-                        else:
-                            file.write(linea)
+            # Actualizar o eliminar el producto en productos_listos.txt
+            self.actualizar_productos_listos(producto_id, cantidad_disponible)
 
             # Actualizar el Treeview
             self.cargar_productos()
+
+            # Resetear campos si es necesario
+            if not producto_encontrado:
+                self.descripcion = None
+                self.image_path = self.default_image_path
+                self.image_label.config(text="Imagen predeterminada", fg="gray")
+                self.entry_precio.delete(0, END)
+                self.categoria_combobox.set("Seleccione")
 
             # Mostrar confirmación
             messagebox.showinfo("Éxito", f"El producto '{nombre}' fue actualizado en la tienda correctamente.")
 
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo colocar el producto en tienda: {e}")
+
+
+
+
+    def actualizar_productos_listos(self, producto_id, cantidad_disponible):
+        """
+        Actualiza la cantidad disponible del producto en productos_listos.txt,
+        o lo elimina si la cantidad es cero.
+        """
+        # Leer productos_listos.txt
+        with open(self.path_productos_listos, "r", encoding="utf-8") as file:
+            productos_listos = file.readlines()
+
+        with open(self.path_productos_listos, "w", encoding="utf-8") as file:
+            for linea in productos_listos:
+                if linea.startswith(f"{producto_id}|"):
+                    if cantidad_disponible > 0:
+                        # Actualizar la cantidad
+                        partes = linea.strip().split("|")
+                        partes[2] = str(cantidad_disponible)
+                        file.write("|".join(partes) + "\n")
+                    # Si la cantidad es cero, no escribimos el producto (lo eliminamos)
+                else:
+                    file.write(linea)
+

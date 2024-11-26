@@ -1,5 +1,4 @@
-1|Salsa Tomate 400g|1.0|Litros
-2|Chips De Papa|1.0|Unidad
-3|Agua|5.0|Litros
-4|Lata Tomate|1.0|Unidad
-5|Aceite|1.0|Litro
+1|Salsa Tomate 400g|1|Litros
+2|Chips De Papa|2|Unidad
+4|Lata Tomate|2|Unidad
+3|Agua|1|Litros

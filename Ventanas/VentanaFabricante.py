@@ -8,7 +8,7 @@ from Ventanas.Ventana_Fabricante import Procesar, Ver_lotesprocesados, MaestroAr
 from Ventanas.Ventana_Fabricante.GestionRecetas import GestionRecetas
 from Ventanas.Ventana_Fabricante.ProcesarRecetas import ProcesarRecetas
 from Ventanas.Ventana_Fabricante.ColocarProductos import ColocarProductos  # Importar el nuevo archivo
-
+from Ventanas.Ventana_Fabricante.EditarProductos import EditarProductos
 class VentanaPrincipalFabricante:
 
     def __init__(self):
@@ -56,6 +56,9 @@ class VentanaPrincipalFabricante:
 
         btn_procesar_receta = Button(self.nav_frame, text="Procesar Recetas", command=lambda:self.procesar_recetas(), bg="#eeeaea", font=btn_font, width=20)
         btn_procesar_receta.pack(pady=10)
+        
+        btn_editar_productos = Button(self.nav_frame, text="Editar Productos en Tienda", command=self.editar_productos_tienda, bg="#eeeaea", font=btn_font, width=20)
+        btn_editar_productos.pack(pady=10)
 
         # Botón nuevo: Colocar Productos Disponibles en Tienda
         btn_colocar_productos = Button(
@@ -111,6 +114,11 @@ class VentanaPrincipalFabricante:
     def procesar_recetas(self):
         self.limpiar_frame_contenido()
         ProcesarRecetas(self.content_frame)
+        
+    def editar_productos_tienda(self):
+        # Crear la vista de editar productos en el content_frame
+        self.limpiar_frame_contenido()
+        EditarProductos(self.content_frame)
 
     def volver_login(self):
         # Volver a la pantalla de login

@@ -10,8 +10,6 @@ from Pagina_Web.Funciones.obtener_productos import Obtener_productos
 
 class CargarProducto:
     
-    
-    
             
     def mostrar_productos(self, productos):
         # Limpiar el frame de productos

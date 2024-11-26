@@ -21,6 +21,7 @@ class ActualizarProductoCarrito:
                         unidad = partes[4].strip()
                         imagen = partes[5].strip()
                         categoria = partes[6].strip()
+                        
 
                        
                         if desc == descripcion:

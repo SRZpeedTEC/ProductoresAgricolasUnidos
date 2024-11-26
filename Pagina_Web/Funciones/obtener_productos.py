@@ -25,7 +25,8 @@ class Obtener_productos:
                                 cantidad = partes[3].strip()
                                 unidad = partes[4].strip()
                                 imagen = partes[5].strip()    
-                                categoria = partes[6].strip()                        
+                                categoria = partes[6].strip()    
+                                                    
                                 try:
                                     cantidad = float(cantidad)
                                     productos[NombreProducto] = {'descripcion': descripcion, 'precio': precio, 'cantidad': cantidad, 'unidad': unidad, 'imagen': imagen, 'categoria': categoria}                              
