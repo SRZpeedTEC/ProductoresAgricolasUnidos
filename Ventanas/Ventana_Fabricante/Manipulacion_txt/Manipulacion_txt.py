@@ -11,6 +11,28 @@ class ManipulacionTXT(ABC):
     path_materia_prima_fabrica = "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
     @classmethod
     def leer_materia_prima(cls):
+        registros = {}
+        path_materia_prima = cls.path_materia_prima_fabrica
+        
+        if os.path.exists(path_materia_prima):
+            with open(path_materia_prima, "r") as file:
+                for line in file:
+                    if line.strip():
+                        partes = line.strip().split("|")
+                        if len(partes) == 4:
+                            codigo = partes[0].strip()
+                            descripcion = partes[1].strip()                          
+                            cantidad = partes[2].strip()
+                            unidad = partes[3].strip()
+                            try:
+                                cantidad = float(cantidad)
+                                registros[codigo] = (descripcion,  cantidad,  unidad)                               
+                            except ValueError:
+                                messagebox.showwarning("Advertencia", f"La cantidad no es válida en la línea: {line}")
+        return registros
+    
+    @classmethod
+    def leer_materia_prima_recetas(cls):
         registros = []
         path_materia_prima = cls.path_materia_prima_fabrica
 
@@ -29,6 +51,8 @@ class ManipulacionTXT(ABC):
                             except ValueError:
                                 messagebox.showwarning("Advertencia", f"La cantidad no es válida en la línea: {line}")
         return registros
+    
+    
 
 
 

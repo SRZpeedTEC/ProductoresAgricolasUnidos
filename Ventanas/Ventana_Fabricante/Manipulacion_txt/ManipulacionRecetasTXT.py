@@ -2,15 +2,9 @@ from tkinter import messagebox
 from pathlib import Path
 
 class ManipulacionRecetasTXT:
-    path_recetas = Path("C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/recetas.txt")
+    path_recetas = "Resources/txt_recetas/recetas.txt"
 
-    @classmethod
-    def _asegurar_archivo(cls):
-        """
-        Garantiza que el archivo existe.
-        """
-        cls.path_recetas.parent.mkdir(parents=True, exist_ok=True)
-        cls.path_recetas.touch(exist_ok=True)
+
 
     @classmethod
     def validar_ingredientes(cls, ingredientes):
@@ -56,7 +50,7 @@ class ManipulacionRecetasTXT:
         """
         Agrega una nueva receta al archivo.
         """
-        cls._asegurar_archivo()
+        
         
         # Validar los ingredientes
         if not cls.validar_ingredientes(ingredientes):
@@ -83,7 +77,7 @@ class ManipulacionRecetasTXT:
         """
         Sobrescribe el archivo con las recetas proporcionadas.
         """
-        cls._asegurar_archivo()
+        
         try:
             with open(cls.path_recetas, "w", encoding="utf-8") as file:
                 for receta in recetas:

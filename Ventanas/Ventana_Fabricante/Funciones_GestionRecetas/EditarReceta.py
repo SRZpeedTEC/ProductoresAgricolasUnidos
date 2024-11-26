@@ -29,8 +29,9 @@ class EditarReceta:
         """
         Crea la ventana para editar la receta seleccionada.
         """
-        receta_id, nombre_receta, cantidad_producir, unidad_produccion, ingredientes_str = self.receta
-        ingredientes_list = [tuple(ingrediente.split(":")) for ingrediente in ingredientes_str.split(";")]
+        receta_id, nombre_receta, cantidad_producir, unidad_produccion, ingredientes_list = self.receta
+        
+
 
         # Crear ventana para editar la receta
         self.ventana_editar = Toplevel()

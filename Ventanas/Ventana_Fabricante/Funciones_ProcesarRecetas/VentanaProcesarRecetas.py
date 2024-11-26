@@ -14,13 +14,10 @@ class VentanaProcesarRecetas:
         self.nombre_receta = nombre_receta
         self.cantidad_procesada = cantidad_procesada
         self.unidad = unidad
-        self.path_recetas = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/recetas.txt")
-        self.path_materia_prima = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_informacion_productos/materia_prima_fabrica.txt")
-        self.path_productos_listos = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/productos_listos.txt")
-
-        # Crear archivo si no existe
-        self.path_productos_listos.parent.mkdir(parents=True, exist_ok=True)
-        self.path_productos_listos.touch(exist_ok=True)
+        self.path_recetas = "Resources/txt_recetas/recetas.txt"
+        self.path_materia_prima = "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
+        self.path_productos_listos = "Resources/txt_recetas/productos_listos.txt"
+   
 
         # Título de la ventana
         Label(self.root, text=f"Procesar Receta ID: {receta_id}", bg="white", font=("Times", 16, "bold")).pack(pady=10)

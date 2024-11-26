@@ -55,7 +55,7 @@ def agregar_receta(self):
     listbox.config(yscrollcommand=scrollbar.set)
 
     # Llenar el Listbox con la materia prima
-    materia_prima = ManipulacionTXT.leer_materia_prima()
+    materia_prima = ManipulacionTXT.leer_materia_prima_recetas()
     for item in materia_prima:
         listbox.insert(END, f"{item[0]} - {item[1]} ({item[2]} {item[3]})")
 

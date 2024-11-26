@@ -1,7 +1,7 @@
 from pathlib import Path
 
 def guardar_receta_procesada(receta_id, nombre_receta):
-    path_productos_listos = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/productos_listos.txt")
+    path_productos_listos = "Resources/txt_recetas/productos_listos.txt"
     try:
         # Crear el archivo si no existe
         if not path_productos_listos.exists():

@@ -6,9 +6,9 @@ from Ventanas.Ventana_Fabricante.Funciones_ProcesarRecetas.VentanaProcesarReceta
 
 class ProcesarRecetas:
     def __init__(self, frame):
-        self.path_recetas = Path(__file__).resolve().parent.parent.parent / "Resources/txt_recetas/recetas.txt"
-        self.path_productos_listos = Path(r"C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/productos_para_vender.txt")
-        self.path_materia_prima = Path(__file__).resolve().parent.parent.parent / "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
+        self.path_recetas = "Resources/txt_recetas/recetas.txt"
+        self.path_productos_listos = "Resources/txt_recetas/productos_para_vender.txt"
+        self.path_materia_prima = "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
 
         Label(frame, text="Gestión de Recetas", bg="white", font=("Times", 18, "bold")).pack(pady=10)
 
@@ -48,7 +48,7 @@ class ProcesarRecetas:
 
         try:
             # Leer las recetas desde el archivo
-            if self.path_recetas.exists():
+            if self.path_recetas != None:
                 with open(self.path_recetas, "r", encoding="utf-8") as file:
                     recetas = file.readlines()
 

@@ -10,7 +10,7 @@ from pathlib import Path
 
 class GestionRecetas:
     def __init__(self, frame):
-        self.path_recetas = Path("C:/Users/Pablo/Documents/GitHub/ProductoresAgricolasUnidos/Resources/txt_recetas/recetas.txt")
+        self.path_recetas = "Resources/txt_recetas/recetas.txt"
 
         self.eliminar_receta_helper = EliminarReceta(self.path_recetas)
 
@@ -107,7 +107,8 @@ class GestionRecetas:
                 return
 
             # Abrir ventana para editar la receta
-            editar_receta_window = EditarReceta(self.path_recetas, receta_encontrada, self.tree)
+            
+            editar_receta_window = EditarReceta(self.path_recetas, receta_encontrada, self.tree)    
             editar_receta_window.guardar_cambios_callback = self.actualizar_recetas
 
         except Exception as e:
