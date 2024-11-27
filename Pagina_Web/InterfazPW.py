@@ -257,7 +257,8 @@ class InterfazWeb():
                 facturas = archivo_facturas.readlines()
 
             # Filtrar las facturas del cliente actual
-            facturas_cliente = [factura for factura in facturas if factura.startswith(nombre_cliente)]
+            facturas_cliente = [factura for factura in facturas if factura.split(", ", 1)[0] == nombre_cliente]
+
 
             if not facturas_cliente:
                 lbl_no_facturas = Label(frame_historial, text="No tienes facturas en el historial.", font=('Arial', 12), bg="#ffffff", fg="#555555")

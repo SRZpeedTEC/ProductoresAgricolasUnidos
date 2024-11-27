@@ -2,7 +2,7 @@ PAP-001|Papa fresca|15.0|Kilogramos
 TOM-001|Tomate fresco|0.0|Kilogramos
 TOM-002|Tomate fresco grande|50.0|Kilogramos
 TOM-003|Tomate fresco pequeno|23.0|Kilogramos
-SAL-003|Sal|2.0|Gramos
+SAL-003|Sal|10.0|Gramos
 OLI-001|Aceite vegetal|3.0|Litros
 AGU-001|Agua|1.5|Litros
 PRE-001|Preservantes|4.0|Gramos

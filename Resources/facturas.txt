@@ -8,3 +8,5 @@ Anonimo, 1. Papas medianas - 1.0 kg x $500.00 = $500.00 |  | Total: $500.00 | To
 santi, 1. Agua Fresca - 1.0 Litros x $2.00 = $2.00 |  | Total: $2.00 | Total: $2.00
 santiago, 1. Agua Fresca - 3.0 Litros x $2.00 = $6.00 |  | Total: $6.00 | Total: $6.00
 santiroob, 1. Papas medianas - 1.0 kg x $500.00 = $500.00 | 2. Lata Tomate - 2.0 Unidad x $50.00 = $100.00 |  | Total: $600.00 | Total: $600.00
+santiroob, 1. Lata Tomate - 3.0 Unidad x $50.00 = $150.00 |  | Total: $150.00 | Ruta: Ruta GAM
+santiroob, 1. Lata Tomate - 1.0 Unidad x $50.00 = $50.00 |  | Total: $50.00 | Ruta: Ruta Llano Grande

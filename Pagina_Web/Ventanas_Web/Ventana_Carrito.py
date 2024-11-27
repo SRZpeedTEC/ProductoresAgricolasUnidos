@@ -79,7 +79,7 @@ class VentanaCarrito:
 
         self.combobox_ruta = ttk.Combobox(ruta_frame, textvariable=self.ruta_seleccionada,
                                 font=Font(family='Arial', size=12), state="readonly")
-        self.combobox_ruta['values'] = ["Ruta GAM", "Ruta Turrialba", "Ruta Llano Grande", "Ruta Pérez Zeledon"]
+        self.combobox_ruta['values'] = ["Ruta GAM", "Ruta Turrialba", "Ruta Llano Grande", "Ruta Perez Zeledon"]
         self.combobox_ruta.pack(side=LEFT, padx=10)
 
         # Botones de acción
