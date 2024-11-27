@@ -60,7 +60,7 @@ class VentanaProcesarRecetas:
                 return
 
             # Leer las recetas desde el archivo
-            with open(self.path_recetas, "r", encoding="utf-8") as file:
+            with open(self.path_recetas, "r") as file:
                 recetas = file.readlines()
 
             # Buscar la receta correspondiente
@@ -94,7 +94,7 @@ class VentanaProcesarRecetas:
                 return
 
             # Leer la materia prima desde el archivo
-            with open(self.path_materia_prima, "r", encoding="utf-8") as file:
+            with open(self.path_materia_prima, "r") as file:
                 materia_prima = {}
                 materia_prima_info = {}
                 for line in file:
@@ -179,7 +179,7 @@ class VentanaProcesarRecetas:
                 return
 
             # Actualizar materia prima
-            with open(self.path_materia_prima, "w", encoding="utf-8") as file:
+            with open(self.path_materia_prima, "w") as file:
                 for codigo, cantidad in self.materia_prima.items():
                     descripcion, unidad = self.materia_prima_info[codigo]
                     file.write(f"{codigo}|{descripcion}|{cantidad}|{unidad}\n")
@@ -207,7 +207,7 @@ class VentanaProcesarRecetas:
             # Leer productos existentes
             productos_existentes = {}
             if os.path.exists(self.path_productos_listos):
-                with open(self.path_productos_listos, "r", encoding="utf-8") as file:
+                with open(self.path_productos_listos, "r") as file:
                     for line in file:
                         partes = line.strip().split("|")
                         if len(partes) >= 4:
@@ -234,7 +234,7 @@ class VentanaProcesarRecetas:
                 }
 
             # Escribir productos actualizados en el archivo
-            with open(self.path_productos_listos, "w", encoding="utf-8") as file:
+            with open(self.path_productos_listos, "w") as file:
                 for id_producto, datos in productos_existentes.items():
                     file.write(f"{id_producto}|{datos['nombre']}|{datos['cantidad']}|{datos['unidad']}\n")
 

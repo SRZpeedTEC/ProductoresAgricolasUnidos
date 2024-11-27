@@ -8,7 +8,7 @@ def guardar_receta_procesada(receta_id, nombre_receta):
             path_productos_listos.touch()
 
         # Guardar la receta procesada en el archivo
-        with open(path_productos_listos, "a", encoding="utf-8") as file:
+        with open(path_productos_listos, "a") as file:
             file.write(f"{receta_id}|{nombre_receta}|Procesado\n")
         print("Receta procesada guardada con éxito.")
     except Exception as e:
