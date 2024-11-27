@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\BasedeDatos",
     "\\Resources",
+    "\\Resources\\Imgs",
+    "\\Resources\\txt_informacion_productos",
     "\\Utiles",
     "\\Ventanas"
   ],

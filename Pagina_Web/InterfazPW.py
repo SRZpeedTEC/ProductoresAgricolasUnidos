@@ -2,8 +2,15 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.font import Font
 from tkinter.font import BOLD
+from tkinter import Toplevel, IntVar
 import Utiles.Genericos as genericos
 from PIL import ImageTk, Image
+from Pagina_Web.Funciones.guardar_en_carrito import GuardarEnCarrito
+from Pagina_Web.Funciones.cargar_productos import CargarProducto
+from Pagina_Web.Funciones.obtener_productos import Obtener_productos
+from Pagina_Web.Funciones.buscar_producto import buscarProductos
+from Pagina_Web.Funciones.actualizar_productos import ActualizarProducto
+
 
 class InterfazWeb():
     
@@ -73,14 +80,23 @@ class InterfazWeb():
     def crear_barra_lateral(self):
         sidebar_frame = Frame(self.Interfaz, bg="#c16767", width=100, padx=20)
         sidebar_frame.pack(side=LEFT, fill=Y)
-        
-        # Ejemplo de botones de categorías
+
+        # Botones de categorías
         categorias = ["Tomates", "Papas", "Chips", "Salsas", "Otros"]
         for categoria in categorias:
             btn_categoria = Button(sidebar_frame, text=categoria, font=Font(family='Times', size=16), background='#e8dede', command=lambda c=categoria: self.ver_categoria(c))
             btn_categoria.pack(fill=X, pady=10, padx=10)
-            
-        logo_empresa = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))       
+
+        btn_deshacer_filtro = Button(sidebar_frame, text="Sin filtros", font=Font(family='Times', size=16), background='#e8dede', command=lambda: self.cargar_productos())
+        btn_deshacer_filtro.pack(fill=X, pady=10, padx=10)
+
+        # Botón "Ver Historial"
+        btn_ver_historial = Button(sidebar_frame, text="Ver Historial", font=Font(family='Times', size=16), background='yellow', command=self.ver_historial)
+        btn_ver_historial.pack(fill=X, pady=10, padx=10, side=BOTTOM)
+
+
+        # Logo de la empresa
+        logo_empresa = genericos.leer_imagen("./Resources/Imgs/logoProvisional.png", (100, 100))
         lbllogo = Label(sidebar_frame, image=logo_empresa, bg='#c16767')
         lbllogo.image = logo_empresa
         lbllogo.pack(side=BOTTOM, pady=20)
@@ -117,45 +133,10 @@ class InterfazWeb():
         # Aquí puedes cargar los productos
         self.cargar_productos()
         
-    def cargar_productos(self):
-        # Ejemplo de lista de productos
-        productos = [
-            {"nombre": "Producto 1", "precio": "$10", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 2", "precio": "$20", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 3", "precio": "$30", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 4", "precio": "$40", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 5", "precio": "$50", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 6", "precio": "$60", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 7", "precio": "$70", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            {"nombre": "Producto 8", "precio": "$80", "imagen": "./Resources/Imgs/logoProvisional.png"},
-            # Puedes agregar más productos si lo deseas
-        ]
-
-        for idx, producto in enumerate(productos):
-            frame_producto = Frame(self.product_frame, bd=2, relief=RIDGE)
-            frame_producto.grid(row=idx // 4, column=idx % 4, padx=20, pady=10)
-
-            # Cargar imagen del producto
-            try:
-                img = ImageTk.PhotoImage(Image.open(producto["imagen"]).resize((150, 150)))
-            except:
-                img = ImageTk.PhotoImage(Image.new('RGB', (150, 150), color='gray'))
-
-            lbl_imagen = Label(frame_producto, image=img)
-            lbl_imagen.image = img  # Mantener referencia
-            lbl_imagen.pack()
-
-            lbl_nombre = Label(frame_producto, text=producto["nombre"])
-            lbl_nombre.pack()
-
-            lbl_precio = Label(frame_producto, text=producto["precio"], fg="green")
-            lbl_precio.pack()
-
-            btn_agregar = Button(frame_producto, text="Agregar al Carrito", command=lambda p=producto: self.agregar_al_carrito(p))
-            btn_agregar.pack(pady=5)
             
-    def ver_carrito(self):
-        messagebox.showinfo("Carrito", "Esta funcionalidad está en desarrollo.")
+    def ver_carrito(self):   
+        from Pagina_Web.Ventanas_Web.Ventana_Carrito import VentanaCarrito
+        VentanaCarrito(self.Interfaz, self.cliente, self)  # Pasar self.Interfaz como parent
         
     def iniciar_sesion(self):
         self.Interfaz.destroy()
@@ -172,11 +153,135 @@ class InterfazWeb():
         Registrar_Cliente()
         
     def buscar_productos(self):
-        termino = self.buscar_var.get()
-        messagebox.showinfo("Buscar", f"Buscando productos que coincidan con: {termino}")
+        buscarProductos.buscar_productos(self)
+        
+    def cargar_productos(self):   
+        self.productos = Obtener_productos.ObtenerProductos()   
+        CargarProducto.mostrar_productos(self, self.productos)
         
     def ver_categoria(self, categoria):
-        messagebox.showinfo("Categoría", f"Mostrando productos de la categoría: {categoria}")
+        self.productos_filtrados = {}
+        for nombre, detalles in self.productos.items():
+            if detalles['categoria'].lower() == categoria.lower():
+                self.productos_filtrados[nombre] = detalles
+        CargarProducto.mostrar_productos(self, self.productos_filtrados)
         
     def agregar_al_carrito(self, producto):
-        messagebox.showinfo("Agregar al Carrito", f"{producto['nombre']} ha sido agregado al carrito.")
+        if not isinstance(producto, dict):
+            messagebox.showerror("Error", "El producto seleccionado no es válido.")
+            return
+
+        # Crear ventana emergente (popup)
+        popup = Toplevel(self.Interfaz)
+        popup.title("Agregar al Carrito")
+        popup.geometry("300x250")
+        popup.resizable(width=0, height=0)
+
+        # Mostrar información del producto
+        lbl_producto = Label(popup, text=f"Producto: {producto['descripcion']}", font=('Arial', 12, 'bold'))
+        lbl_producto.pack(pady=10)
+
+        # Procesar el precio para convertirlo en número
+        try:
+            precio_unitario = float(producto['precio'].replace('$', '').strip())
+        except ValueError:
+            messagebox.showerror("Error", f"Precio inválido: {producto['precio']}")
+            popup.destroy()
+            return
+
+        lbl_precio = Label(popup, text=f"Precio: ${precio_unitario:.2f} x {producto['unidad']}", font=('Arial', 10))
+        lbl_precio.pack()
+
+        # Variable para la cantidad seleccionada
+        cantidad_var = IntVar(value=1)
+
+        lbl_cantidad = Label(popup, text="Cantidad:", font=('Arial', 10))
+        lbl_cantidad.pack(pady=5)
+
+        spinbox_cantidad = Spinbox(popup, from_=1, to=int(producto['cantidad']), textvariable=cantidad_var, width=5)
+        spinbox_cantidad.pack()
+
+        # Label para mostrar el total
+        lbl_total = Label(popup, text=f"Total: ${precio_unitario * cantidad_var.get():.2f}", font=('Arial', 12, 'bold'), fg="blue")
+        lbl_total.pack(pady=10)
+
+        # Actualizar el total dinámicamente
+        def actualizar_total(*args):
+            cantidad = cantidad_var.get()
+            try:
+                cantidad = int(cantidad)
+                total = precio_unitario * cantidad
+                lbl_total.config(text=f"Total: ${total:.2f}")
+            except ValueError:
+                lbl_total.config(text="Total: $0.00")
+
+        # Vincular el cambio de cantidad al cálculo del total
+        cantidad_var.trace_add("write", actualizar_total)
+
+        # Botón para confirmar
+        btn_confirmar = Button(popup, text="Añadir al Carrito", command=lambda: self.confirmar_agregar_carrito(popup, producto, cantidad_var.get()))
+        btn_confirmar.pack(pady=10)
+
+
+
+    def confirmar_agregar_carrito(self, popup, producto, cantidad):
+        popup.destroy()  # Cerrar la ventana emergente
+        ActualizarProducto.actualizar_producto(self,producto,cantidad)
+        messagebox.showinfo("Carrito", f"{cantidad} x {producto['descripcion']} se han agregado al carrito.")
+        GuardarEnCarrito.guardar_en_carrito(self,producto,cantidad)
+        self.cargar_productos()
+        
+    def ver_historial(self):
+        if self.cliente is None:
+            messagebox.showerror("Error", "Debes iniciar sesión para ver tu historial.")
+            return
+
+        # Crear ventana Toplevel
+        historial_window = Toplevel(self.Interfaz)
+        nombre_cliente = self.cliente[0]
+        historial_window.title(f"Historial de Facturas de {nombre_cliente}")
+        historial_window.geometry("600x400")
+        historial_window.resizable(False, False)
+
+        # Contenedor para mostrar el historial
+        frame_historial = Frame(historial_window, bg="#B90518")  # Cambiar el fondo del frame principal
+        frame_historial.pack(fill=BOTH, expand=True, padx=10, pady=10)
+
+        # Etiqueta del título
+        lbl_titulo = Label(frame_historial, text=f"Historial de Facturas de {nombre_cliente}", font=('Arial', 16, 'bold'), bg="#B90518")
+        lbl_titulo.pack(pady=10)
+
+        try:
+            # Leer el archivo de facturas
+            with open("Resources/facturas.txt", "r") as archivo_facturas:
+                facturas = archivo_facturas.readlines()
+
+            # Filtrar las facturas del cliente actual
+            facturas_cliente = [factura for factura in facturas if factura.split(", ", 1)[0] == nombre_cliente]
+
+
+            if not facturas_cliente:
+                lbl_no_facturas = Label(frame_historial, text="No tienes facturas en el historial.", font=('Arial', 12), bg="#ffffff", fg="#555555")
+                lbl_no_facturas.pack(pady=20)
+            else:
+                # Mostrar las facturas en un texto con scroll
+                text_historial = Text(frame_historial, wrap=WORD, height=15, font=('Arial', 10), bg="#f5f5f5")
+                text_historial.pack(fill=BOTH, expand=True)
+
+                for factura in facturas_cliente:
+                    # Remover el nombre del cliente y duplicado del total
+                    partes_factura = factura.split(", ", 1)[1].rsplit("| Total: ", 1)
+                    detalles = partes_factura[0].strip()
+                    total = partes_factura[1].strip()
+
+                    # Insertar detalles y total
+                    text_historial.insert(END, f"{detalles}\n")
+                    text_historial.insert(END, f"Total: {total}\n\n")
+
+                text_historial.config(state=DISABLED)  # Hacer el texto de solo lectura
+        except FileNotFoundError:
+            messagebox.showerror("Error", "El archivo de facturas no se encontró.")
+
+
+
+    

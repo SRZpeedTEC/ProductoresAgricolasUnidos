@@ -1,0 +1,233 @@
+import os
+from tkinter import Toplevel, Label, Entry, Button, messagebox, END
+from tkinter import ttk
+
+class EditarReceta:
+    def __init__(self, path_recetas, receta, tree):
+        """
+        Inicializa la clase EditarReceta con la ruta al archivo de recetas y la receta seleccionada.
+        
+        :param path_recetas: Ruta al archivo de recetas.
+        :param receta: Receta seleccionada (tupla con ID, Nombre, Cantidad, Unidad, Ingredientes).
+        :param tree: Treeview que muestra las recetas.
+        """
+        self.path_recetas = os.path.abspath(path_recetas)
+        self.receta = receta
+        self.tree = tree
+        self.ventana_editar = None
+        self.id_receta_entry = None
+        self.nombre_receta_entry = None
+        self.cantidad_producir_entry = None
+        self.unidad_produccion_combobox = None
+        self.ingredientes_tree = None
+        self.codigo_entry = None
+        self.cantidad_entry = None
+        self.guardar_cambios_callback = None
+
+        self._crear_ventana_editar()
+
+    def _crear_ventana_editar(self):
+        """
+        Crea la ventana para editar la receta seleccionada.
+        """
+        receta_id, nombre_receta, cantidad_producir, unidad_produccion, ingredientes_list = self.receta
+        
+
+
+        # Crear ventana para editar la receta
+        self.ventana_editar = Toplevel()
+        self.ventana_editar.title(f"Editar Receta: {nombre_receta}")
+        self.ventana_editar.geometry("600x700")
+        self.ventana_editar.resizable(False, False)
+        self.ventana_editar.configure(bg="#f0f0f5")  # Fondo de ventana
+
+        # Widgets para el formulario
+        Label(self.ventana_editar, text="ID Receta:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=0, column=0, padx=10, pady=5, sticky="w")
+        self.id_receta_entry = Entry(self.ventana_editar, width=30, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.id_receta_entry.insert(0, receta_id)
+        self.id_receta_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Nombre Receta:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=1, column=0, padx=10, pady=5, sticky="w")
+        self.nombre_receta_entry = Entry(self.ventana_editar, width=30, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.nombre_receta_entry.insert(0, nombre_receta)
+        self.nombre_receta_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Cantidad a Producir:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=2, column=0, padx=10, pady=5, sticky="w")
+        self.cantidad_producir_entry = Entry(self.ventana_editar, width=30, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.cantidad_producir_entry.insert(0, cantidad_producir)
+        self.cantidad_producir_entry.grid(row=2, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Unidad de Producción:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=3, column=0, padx=10, pady=5, sticky="w")
+        self.unidad_produccion_combobox = ttk.Combobox(self.ventana_editar, width=27, state="readonly", font=("Arial", 11))
+        self.unidad_produccion_combobox["values"] = ["Unidad", "Kilogramos", "Litros"]
+        self.unidad_produccion_combobox.set(unidad_produccion)  # Establecer valor inicial
+        self.unidad_produccion_combobox.grid(row=3, column=1, padx=10, pady=5)
+
+        # Tabla de Ingredientes Seleccionados
+        Label(self.ventana_editar, text="Ingredientes:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=4, column=0, padx=10, pady=5, sticky="w")
+
+        self.ingredientes_tree = ttk.Treeview(self.ventana_editar, columns=("Código", "Cantidad"), show="headings")
+        self.ingredientes_tree.heading("Código", text="Código")
+        self.ingredientes_tree.heading("Cantidad", text="Cantidad")
+        self.ingredientes_tree.column("Código", width=200, anchor="center")
+        self.ingredientes_tree.column("Cantidad", width=150, anchor="center")
+        self.ingredientes_tree.grid(row=5, column=0, columnspan=3, padx=10, pady=10, sticky="nsew", rowspan=4)
+
+        # Llenar el Treeview con los ingredientes actuales
+        for codigo, cantidad in ingredientes_list:
+            self.ingredientes_tree.insert("", "end", values=(codigo.strip(), cantidad.strip()))
+
+        # Entradas para agregar un ingrediente nuevo
+        Label(self.ventana_editar, text="Código Ingrediente:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=9, column=0, padx=10, pady=5, sticky="w")
+        self.codigo_entry = Entry(self.ventana_editar, width=20, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.codigo_entry.grid(row=9, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Cantidad:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=10, column=0, padx=10, pady=5, sticky="w")
+        self.cantidad_entry = Entry(self.ventana_editar, width=20, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.cantidad_entry.grid(row=10, column=1, padx=10, pady=5)
+
+        # Botón para agregar ingrediente
+        Button(self.ventana_editar, text="Agregar Ingrediente", command=self.agregar_ingrediente, bg="#28a745", fg="#ffffff", font=("Arial", 11, "bold")).grid(row=11, column=0, padx=10, pady=10)
+
+        # Botón para eliminar ingrediente
+        Button(self.ventana_editar, text="Eliminar Ingrediente", command=self.eliminar_ingrediente, bg="#dc3545", fg="#ffffff", font=("Arial", 11, "bold")).grid(row=11, column=1, padx=10, pady=10)
+
+        # Botón para guardar cambios
+        Button(self.ventana_editar, text="Guardar Cambios", command=self.guardar_cambios, bg="#007bff", fg="#ffffff", font=("Arial", 12, "bold")).grid(row=12, column=1, padx=10, pady=20)
+        
+        self.materia_prima = self._leer_materia_prima()
+
+        # Crear un diccionario para mapear código a nombre
+        self.codigo_a_nombre = {codigo: nombre for codigo, nombre in self.materia_prima}
+
+        
+
+        # Combobox para seleccionar el ingrediente
+        self.codigo_combobox = ttk.Combobox(self.ventana_editar, width=27, state="readonly", font=("Arial", 11))
+        self.codigo_combobox["values"] = [f"{codigo} - {nombre}" for codigo, nombre in self.materia_prima]
+        self.codigo_combobox.grid(row=9, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Cantidad:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=10, column=0, padx=10, pady=5, sticky="w")
+        self.cantidad_entry = Entry(self.ventana_editar, width=20, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.cantidad_entry.grid(row=10, column=1, padx=10, pady=5)
+
+        # Botón para agregar ingrediente
+        Button(self.ventana_editar, text="Agregar/Actualizar Ingrediente", command=self.agregar_ingrediente, bg="#28a745", fg="#ffffff", font=("Arial", 11, "bold")).grid(row=11, column=0, padx=10, pady=10)
+
+    def agregar_ingrediente(self):
+        """
+        Agrega un nuevo ingrediente al Treeview o actualiza la cantidad si ya existe.
+        """
+        seleccionado = self.codigo_combobox.get()
+        cantidad = self.cantidad_entry.get().strip()
+
+        if not seleccionado or not cantidad:
+            messagebox.showwarning("Advertencia", "Por favor, selecciona un ingrediente y proporciona la cantidad.")
+            return
+
+        try:
+            # Verificar que la cantidad sea numérica
+            cantidad_float = float(cantidad)
+        except ValueError:
+            messagebox.showwarning("Advertencia", "Por favor, ingresa una cantidad válida (número).")
+            return
+
+        # Obtener el código del ingrediente seleccionado
+        codigo = seleccionado.split(" - ")[0]
+
+        # Verificar si el ingrediente ya existe en el Treeview
+        existe = False
+        for item in self.ingredientes_tree.get_children():
+            valores = self.ingredientes_tree.item(item)["values"]
+            if valores[0] == codigo:
+                # Actualizar la cantidad
+                self.ingredientes_tree.item(item, values=(codigo, cantidad))
+                existe = True
+                break
+
+        if not existe:
+            # Insertar el nuevo ingrediente en el Treeview
+            self.ingredientes_tree.insert("", "end", values=(codigo, cantidad))
+
+        # Limpiar las entradas
+        self.codigo_combobox.set("")
+        self.cantidad_entry.delete(0, END)
+
+
+    def eliminar_ingrediente(self):
+        """
+        Elimina el ingrediente seleccionado del Treeview.
+        """
+        seleccion = self.ingredientes_tree.selection()
+        if not seleccion:
+            messagebox.showwarning("Advertencia", "Por favor, selecciona un ingrediente para eliminar.")
+            return
+
+        for item in seleccion:
+            self.ingredientes_tree.delete(item)
+
+    def guardar_cambios(self):
+        """
+        Guarda los cambios realizados en la receta.
+        """
+        nuevo_id = self.id_receta_entry.get().strip()
+        nuevo_nombre = self.nombre_receta_entry.get().strip()
+        nueva_cantidad = self.cantidad_producir_entry.get().strip()
+        nueva_unidad = self.unidad_produccion_combobox.get().strip()
+
+        if not nuevo_id or not nuevo_nombre or not nueva_cantidad or not nueva_unidad:
+            messagebox.showwarning("Advertencia", "Todos los campos son obligatorios.")
+            return
+
+        # Obtener los ingredientes del Treeview
+        nuevos_ingredientes = []
+        for item in self.ingredientes_tree.get_children():
+            valores = self.ingredientes_tree.item(item)["values"]
+            nuevos_ingredientes.append((valores[0], valores[1]))  # Almacenar como tuplas
+
+        # Formatear los ingredientes para el archivo
+        ingredientes_str = ";".join([f"{codigo}:{cantidad}" for codigo, cantidad in nuevos_ingredientes])
+
+        # Actualizar el archivo
+        try:
+            # Leer todas las recetas del archivo
+            with open(self.path_recetas, "r", encoding="utf-8") as file:
+                recetas = file.readlines()
+
+            # Actualizar la receta correspondiente
+            for i in range(len(recetas)):
+                partes = recetas[i].strip().split("|")
+                if len(partes) >= 5 and partes[0] == self.receta[0]:
+                    recetas[i] = f"{nuevo_id}|{nuevo_nombre}|{nueva_cantidad}|{nueva_unidad}|{ingredientes_str}\n"
+                    break
+
+            # Escribir las recetas actualizadas en el archivo
+            with open(self.path_recetas, "w", encoding="utf-8") as file:
+                file.writelines(recetas)
+
+            # Mostrar mensaje de éxito y cerrar la ventana de edición
+            messagebox.showinfo("Éxito", "Receta actualizada con éxito.")
+            self.ventana_editar.destroy()
+
+            if self.guardar_cambios_callback:
+                self.guardar_cambios_callback()
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo guardar los cambios: {e}")
+    
+    def _leer_materia_prima(self):
+        
+        path_materia_prima = "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
+        materia_prima = []
+        try:
+            with open(path_materia_prima, "r") as file:
+                for linea in file:
+                    partes = linea.strip().split("|")
+                    if len(partes) >= 2:
+                        codigo = partes[0].strip()
+                        nombre = partes[1].strip()
+                        materia_prima.append((codigo, nombre))
+            return materia_prima
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo leer la materia prima: {e}")
+            return []
+

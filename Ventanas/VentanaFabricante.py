@@ -5,7 +5,10 @@ import Utiles.Genericos as gnr
 from PIL import ImageTk, Image
 from Utiles.Genericos import centrar_ventana
 from Ventanas.Ventana_Fabricante import Procesar, Ver_lotesprocesados, MaestroArticulos
-
+from Ventanas.Ventana_Fabricante.GestionRecetas import GestionRecetas
+from Ventanas.Ventana_Fabricante.ProcesarRecetas import ProcesarRecetas
+from Ventanas.Ventana_Fabricante.ColocarProductos import ColocarProductos  # Importar el nuevo archivo
+from Ventanas.Ventana_Fabricante.EditarProductos import EditarProductos
 class VentanaPrincipalFabricante:
 
     def __init__(self):
@@ -45,13 +48,37 @@ class VentanaPrincipalFabricante:
         btn_ver_procesados = Button(self.nav_frame, text="Ver Lotes Procesados", command=self.mostrar_lotes_procesados, bg="#eeeaea", font=btn_font, width=20)
         btn_ver_procesados.pack(pady=10)
         
-        btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=self.mostrar_maestro_articulos, bg="#eeeaea", font=btn_font, width=20)
+        btn_maestro_articulos = Button(self.nav_frame, text="Gestionar Inventario", command=lambda:self.mostrar_maestro_articulos(), bg="#eeeaea", font=btn_font, width=20)
         btn_maestro_articulos.pack(pady=10)
+        
+        btn_receta = Button(self.nav_frame, text="Gestionar Recetas", command=lambda:self.mostrar_recetas(), bg="#eeeaea", font=btn_font, width=20)
+        btn_receta.pack(pady=10)
+
+        btn_procesar_receta = Button(self.nav_frame, text="Procesar Recetas", command=lambda:self.procesar_recetas(), bg="#eeeaea", font=btn_font, width=20)
+        btn_procesar_receta.pack(pady=10)
+        
+        btn_editar_productos = Button(self.nav_frame, text="Editar Productos en Tienda", command=self.editar_productos_tienda, bg="#eeeaea", font=btn_font, width=20)
+        btn_editar_productos.pack(pady=10)
+
+        # Botón nuevo: Colocar Productos Disponibles en Tienda
+        btn_colocar_productos = Button(
+            self.nav_frame,
+            text="Colocar Productos en Tienda",
+            command=self.colocar_productos_en_tienda,
+            bg="#eeeaea",
+            font=btn_font,
+            width=20
+        )
+        btn_colocar_productos.pack(pady=10)
 
         btn_volver_login = Button(self.nav_frame, text="Volver al Login", command=self.volver_login, bg="#eeeaea", font=btn_font, width=20)
         btn_volver_login.pack(pady=10)
-        
-        
+
+    def colocar_productos_en_tienda(self):
+        # Limpiar y mostrar la funcionalidad de colocar productos
+        self.limpiar_frame_contenido()
+        ColocarProductos(self.content_frame)
+
     def limpiar_frame_contenido(self):
         # Limpiar el frame de contenido antes de mostrar algo nuevo
         for widget in self.content_frame.winfo_children():
@@ -79,6 +106,19 @@ class VentanaPrincipalFabricante:
         # Crear la vista de maestro de artículos en el content_frame
         self.limpiar_frame_contenido()
         MaestroArticulos.GestionMateriaPrima(self.content_frame)
+    
+    def mostrar_recetas(self):
+        self.limpiar_frame_contenido()
+        GestionRecetas(self.content_frame)
+
+    def procesar_recetas(self):
+        self.limpiar_frame_contenido()
+        ProcesarRecetas(self.content_frame)
+        
+    def editar_productos_tienda(self):
+        # Crear la vista de editar productos en el content_frame
+        self.limpiar_frame_contenido()
+        EditarProductos(self.content_frame)
 
     def volver_login(self):
         # Volver a la pantalla de login

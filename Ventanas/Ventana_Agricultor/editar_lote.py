@@ -41,10 +41,7 @@ def mostrar_editar_lote(content_frame):
 
     lote_tree.bind("<ButtonRelease-1>", seleccionar_lote)
 
-    Label(content_frame, text="Tipo de Producto:", bg="white", font=("Times", 12)).pack(pady=5)
-    tipo_entry = ttk.Combobox(content_frame, textvariable=tipo_var, values=["Tomate", "Papa"], state="readonly")
-    tipo_entry.pack(pady=5)
-
+    
     Label(content_frame, text="Cantidad (kg):", bg="white", font=("Times", 12)).pack(pady=5)
     cantidad_entry = Entry(content_frame, textvariable=cantidad_var)
     cantidad_entry.pack(pady=5)

@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk, messagebox
 import os
 import random
+from Ventanas.Ventana_Fabricante.Manipulacion_txt.Manipulacion_txt import ManipulacionTXT
 
 class Procesar:
 
@@ -22,15 +23,12 @@ class Procesar:
         frame_botones.pack(pady=5)
 
         # Botón para iniciar la máquina
-        btn_iniciar = Button(frame_botones, text="Iniciar Máquina", command=self.iniciar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
+        btn_iniciar = Button(frame_botones, text="Iniciar Proceso", command=self.iniciar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
         btn_iniciar.grid(row=0, column=0, padx=5, pady=5)
 
-        # Botón para pausar la máquina
-        btn_pausar = Button(frame_botones, text="Pausar Máquina", command=self.pausar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
-        btn_pausar.grid(row=0, column=1, padx=5, pady=5)
 
         # Botón para finalizar la máquina
-        btn_finalizar = Button(frame_botones, text="Finalizar Máquina", command=self.finalizar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
+        btn_finalizar = Button(frame_botones, text="Finalizar Proceso", command=self.finalizar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
         btn_finalizar.grid(row=0, column=2, padx=5, pady=5)
 
         # Selector de lote a procesar
@@ -55,29 +53,9 @@ class Procesar:
         self.text_area.pack(pady=10)
 
         # Cargar el diccionario de productos
-        self.productos = self.cargar_productos()
+        self.productos = ManipulacionTXT.leer_materia_prima()
 
-    def cargar_productos(self):
-        productos = {}
-        try:
-            with open("Resources/txt_informacion_productos/materia_prima_items.txt", "r") as file:
-                for line in file:
-                    if line.strip():
-                        partes = line.strip().split('|')
-                        if len(partes) == 3:
-                            codigo = partes[0].strip()
-                            descripcion = partes[1].strip()
-                            unidad_medida = partes[2].strip()
-                            productos[codigo] = {
-                                'descripcion': descripcion,
-                                'unidadMedida': unidad_medida
-                            }
-                        else:
-                            messagebox.showwarning("Advertencia", f"Línea inválida en productos.txt: {line}")
-            return productos
-        except FileNotFoundError:
-            messagebox.showerror("Error", "No se encontró el archivo de productos.")
-            return {}
+            
 
     def leer_lotes_procesados(self):
         # Leer el archivo de lotes procesados y devolver un conjunto de lotes ya procesados
@@ -169,6 +147,8 @@ class Procesar:
 
         # Actualizar el log con los detalles del procesamiento
         self.actualizar_log("Resultado del procesamiento:")
+        self.actualizar_log(f"Lote: {self.lote_confirmado}")
+        """
         for codigo, cantidad in resultado.items():
             producto = self.productos.get(codigo, {})
             descripcion = producto.get('descripcion', 'No disponible')
@@ -180,11 +160,14 @@ class Procesar:
             for codigo, cantidad in resultado.items():
                 unidad = self.productos.get(codigo, {}).get('unidadMedida', 'Unidad')
                 file.write(f"{codigo}: {cantidad} {unidad}\n")
+        """
         
-        lote_procesado_informacion = f"{self.lote_confirmado}: "
+        lote_procesado_informacion = f"{self.lote_confirmado}"
         self.lotes_procesados.add(self.lote_confirmado)
         with open("Resources/txt_lotes/lotes_procesados.txt", "a") as file:
+            '''
             for codigo, cantidad in resultado.items():
                 lote_procesado_informacion += f"{codigo}: {cantidad} {unidad}, "
-            file.write(lote_procesado_informacion.strip(", ") + "\n")
+            '''
+            file.write(lote_procesado_informacion.strip() + "\n")
             

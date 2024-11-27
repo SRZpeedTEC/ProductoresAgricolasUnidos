@@ -37,13 +37,11 @@ class AgregarMateriaPrima:
         self.cantidad_var = StringVar()
         Entry(self.ventana_agregar, textvariable=self.cantidad_var).pack(pady=5)
 
-        Button(self.ventana_agregar, text="Guardar", command=lambda: self.guardar_materia_prima.guardar_nueva_materia_prima(self.codigo_var, self.cantidad_var, self.unidad_var, self.ventana_agregar, tree)).pack(pady=10)
+        Button(self.ventana_agregar, text="Guardar", command=lambda: self.guardar_materia_prima.guardar_nueva_materia_prima(self.codigo_var, self.cantidad_var, self.ventana_agregar, tree)).pack(pady=10)
         
     def actualizar_descripcion_producto(self, event):
         codigo = self.codigo_var.get()
-        producto = self.productos.get(codigo, {})
-        descripcion = producto.get('descripcion', 'No disponible')
-        unidad = producto.get('unidadMedida', 'No disponible')        
+        descripcion, cantidad, unidad = self.productos[codigo]       
         self.descripcion_var.set(descripcion)
         self.unidad_var.set(unidad)
         self.lbl_unidad.config(text=f"cantidad en: {self.unidad_var.get()}")

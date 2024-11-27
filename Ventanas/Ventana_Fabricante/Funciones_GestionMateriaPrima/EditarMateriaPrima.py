@@ -23,13 +23,12 @@ class EditarMateriaPrima:
         values = treeProductos.item(selected_item, 'values')
         codigo_seleccionado = values[0]
         descripcion = values[1]
-        cantidad_actual = values[2]
-        unidad = values[3]
+        cantidad_actual = values[2]      
     
         # Crear una nueva ventana para editar
         self.ventana_editar = Toplevel()
         self.ventana_editar.title("Editar Materia Prima")
-        self.ventana_editar.geometry("350x250")
+        self.ventana_editar.geometry("350x350")
     
         # Campos de entrada
         Label(self.ventana_editar, text="Código:").pack(pady=5)
@@ -38,10 +37,7 @@ class EditarMateriaPrima:
     
         Label(self.ventana_editar, text="Descripción:").pack(pady=5)
         Label(self.ventana_editar, text=descripcion).pack(pady=5)
-    
-        Label(self.ventana_editar, text="Unidad de Medida:").pack(pady=5)
-        Label(self.ventana_editar, text=unidad).pack(pady=5)
-    
+ 
         Label(self.ventana_editar, text="Cantidad:").pack(pady=5)
         self.cantidad_var_editar = StringVar(value=cantidad_actual)
         Entry(self.ventana_editar, textvariable=self.cantidad_var_editar).pack(pady=5)

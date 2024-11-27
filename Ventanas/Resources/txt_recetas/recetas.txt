@@ -1,0 +1,6 @@
+12|122|PAP-001:12.0, OLI-001:1.0|Instrucciones
+1|jugo|TOM-002:2.0, SAL-003:1.0|Instrucciones
+2|Pasta|TOM-002:12.0, SAL-003:1.0, OLI-001:3.0|Instrucciones
+3|chips|PAP-001:23.0, OLI-001:2.0, SAL-003:2.0|Instrucciones
+5,tomate,TOM-002:2.0
+1,papa,PAP-001:12.0

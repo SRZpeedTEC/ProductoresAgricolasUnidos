@@ -12,7 +12,7 @@ class EliminarMateriaPrima:
         
         self.productos = productos
         self.guardar_materia_prima = GuardarMateriaPrima(self.productos)
-        self.manipular_registros = ManipulacionRegistros(self.productos)
+        self.manipular_registros = ManipulacionRegistros()
         
     def eliminar_materia_prima(self, tree):
         # Obtener el item seleccionado
@@ -28,7 +28,7 @@ class EliminarMateriaPrima:
             values = tree.item(selected_item, 'values')
             codigo_seleccionado = values[0]
 
-            if self.manipular_registros.eliminar_registro(codigo_seleccionado):
-                self.manipular_registros.cargar_materia_prima(tree)
+            if ManipulacionRegistros.eliminar_registro(codigo_seleccionado):
+                ManipulacionRegistros.cargar_materia_prima(tree)
                 
     

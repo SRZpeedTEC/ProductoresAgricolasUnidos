@@ -1,0 +1,3 @@
+2206,nugget,SAL-003:2.0
+6,Lays,EMP-002:2.0, PAP-001:14.0, OLI-001:1.0
+22,tomate,TOM-001:2.0
