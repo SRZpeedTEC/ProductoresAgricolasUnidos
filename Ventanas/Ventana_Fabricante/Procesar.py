@@ -23,15 +23,12 @@ class Procesar:
         frame_botones.pack(pady=5)
 
         # Botón para iniciar la máquina
-        btn_iniciar = Button(frame_botones, text="Iniciar Máquina", command=self.iniciar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
+        btn_iniciar = Button(frame_botones, text="Iniciar Proceso", command=self.iniciar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
         btn_iniciar.grid(row=0, column=0, padx=5, pady=5)
 
-        # Botón para pausar la máquina
-        btn_pausar = Button(frame_botones, text="Pausar Máquina", command=self.pausar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
-        btn_pausar.grid(row=0, column=1, padx=5, pady=5)
 
         # Botón para finalizar la máquina
-        btn_finalizar = Button(frame_botones, text="Finalizar Máquina", command=self.finalizar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
+        btn_finalizar = Button(frame_botones, text="Finalizar Proceso", command=self.finalizar_maquina, bg="#FCC509", font=("Times", 10), width=btn_width)
         btn_finalizar.grid(row=0, column=2, padx=5, pady=5)
 
         # Selector de lote a procesar
