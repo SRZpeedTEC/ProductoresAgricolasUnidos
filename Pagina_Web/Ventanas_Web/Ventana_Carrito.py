@@ -1,5 +1,5 @@
 from tkinter import *
-import os
+from tkinter import ttk  # Para incluir el ComboBox
 from tkinter.font import Font, BOLD
 from tkinter import messagebox
 from Pagina_Web.Funciones.obtener_productos_carrito import Obtener_productos_carrito
@@ -7,10 +7,10 @@ from Pagina_Web.Funciones.actualizar_productos_carrito import ActualizarProducto
 
 class VentanaCarrito:
     def __init__(self, parent, cliente, interfaz_principal):
-        
-        self.parent = parent  # Aquí, parent será self.Interfaz
+        self.parent = parent
         self.cliente = cliente
         self.interfaz_web = interfaz_principal
+        self.ruta_seleccionada = StringVar(value="Ruta GAM")
 
         # Determinar el archivo de carrito basándonos en el atributo 'cliente'
         if self.cliente:
@@ -19,7 +19,7 @@ class VentanaCarrito:
             self.carrito_archivo = "Resources/carritos/carrito_anonimo.txt"
 
         # Crear la ventana
-        self.ventana = Toplevel(parent)  # Pasar parent como el master
+        self.ventana = Toplevel(parent)
         self.ventana.title("Tu carrito de compras")
         self.ventana.geometry('800x600')
         self.ventana.config(bg='#fcfcfc')
@@ -50,16 +50,13 @@ class VentanaCarrito:
         factura_texto = ""  # Aquí almacenaremos el texto de la factura
 
         if self.carrito:
-            for idx, (descripcion, producto) in enumerate(self.carrito.items()):  # Iterar sobre los elementos del diccionario
-                precio = float(producto['precio'].replace('$', '').strip())  # Convertir el precio
-                cantidad = producto['cantidad']  # Obtener cantidad
-                total_producto = precio * cantidad  # Calcular el total del producto
-                total_costo += total_producto  # Sumar al total general
-
-                # Crear el texto de la factura
+            for idx, (descripcion, producto) in enumerate(self.carrito.items()):
+                precio = float(producto['precio'].replace('$', '').strip())
+                cantidad = producto['cantidad']
+                total_producto = precio * cantidad
+                total_costo += total_producto
                 factura_texto += f"{idx + 1}. {descripcion} - {cantidad} {producto['unidad']} x ${precio:.2f} = ${total_producto:.2f}\n"
 
-            # Agregar el total
             factura_texto += f"\nTotal: ${total_costo:.2f}\n"
         else:
             factura_texto = "Tu carrito está vacío.\n"
@@ -71,6 +68,19 @@ class VentanaCarrito:
             font=Font(family='Arial', size=12), bg='#fcfcfc', justify=CENTER, anchor=N
         )
         lbl_factura.pack(padx=10, pady=10, fill=X)
+
+        # ComboBox para seleccionar la ruta de entrega
+        ruta_frame = Frame(self.ventana, bg='#fcfcfc')
+        ruta_frame.pack(pady=10)
+        
+        lbl_ruta = Label(ruta_frame, text="Selecciona una ruta de entrega:",
+                 font=Font(family='Arial', size=12), bg='#fcfcfc')
+        lbl_ruta.pack(side=LEFT, padx=10)
+
+        self.combobox_ruta = ttk.Combobox(ruta_frame, textvariable=self.ruta_seleccionada,
+                                font=Font(family='Arial', size=12), state="readonly")
+        self.combobox_ruta['values'] = ["Ruta GAM", "Ruta Turrialba", "Ruta Llano Grande", "Ruta Pérez Zeledon"]
+        self.combobox_ruta.pack(side=LEFT, padx=10)
 
         # Botones de acción
         botones_frame = Frame(self.ventana, bg='#fcfcfc')
@@ -98,6 +108,32 @@ class VentanaCarrito:
         )
         btn_vaciar.pack(side=LEFT, padx=10, pady=10, anchor='w')
 
+    def confirmar_compra(self):
+        if not self.carrito:
+            messagebox.showinfo("Carrito", "Tu carrito está vacío.")
+            return
+
+        # Obtener la ruta seleccionada
+        ruta_seleccionada = self.combobox_ruta.get()
+        
+
+
+        factura_texto, total_costo = self.generar_factura()
+        
+        messagebox.showinfo(
+            "Compra Confirmada",
+            f"Tu compra ha sido confirmada con éxito.\nRuta seleccionada: {ruta_seleccionada}\n\nTotal: ${total_costo:.2f}"
+        )
+        self.guardar_factura(factura_texto)
+
+        # Vaciar el carrito
+        with open(self.carrito_archivo, "w", encoding="utf-8") as archivo:
+            archivo.write("")
+        self.carrito.clear()
+
+        # Cerrar la ventana
+        self.ventana.destroy()
+
     def vaciar_carrito(self):
         # Iterar sobre los productos del carrito antes de vaciarlo
         if self.carrito:
@@ -115,38 +151,6 @@ class VentanaCarrito:
         # Cerrar la ventana actual
         self.ventana.destroy()
 
-    def confirmar_compra(self):
-        # Verificar si el carrito está vacío
-        if not self.carrito:
-            messagebox.showinfo("Carrito", "Tu carrito está vacío.")
-            return
-
-        # Crear la factura y calcular el total
-        try:
-            factura_texto, total_costo = self.generar_factura()
-
-            # Mostrar mensaje de confirmación al usuario
-            messagebox.showinfo(
-                "Compra Confirmada",
-                f"Tu compra ha sido confirmada con éxito.\n¡Gracias por tu compra!\n\nTotal: ${total_costo:.2f}"
-            )
-
-            # Guardar la factura
-            self.guardar_factura(factura_texto, total_costo)
-
-            # Vaciar el carrito
-            try:
-                with open(self.carrito_archivo, "w", encoding="utf-8") as archivo:
-                    archivo.write("")
-                self.carrito.clear()
-            except IOError as e:
-                raise IOError(f"No se pudo vaciar el carrito: {e}")
-
-            # Cerrar la ventana actual
-            self.ventana.destroy()
-
-        except Exception as e:
-            messagebox.showerror("Error", f"Ocurrió un error al confirmar la compra:\n{str(e)}")
 
     def generar_factura(self):
         factura_texto = ""
@@ -169,10 +173,12 @@ class VentanaCarrito:
         factura_texto += f"\nTotal: ${total_costo:.2f}"
         return factura_texto, total_costo
 
-    def guardar_factura(self, factura_texto, total_costo):
+    def guardar_factura(self, factura_texto):
         try:
             cliente_nombre = self.cliente[0] if self.cliente else 'Anonimo'
-            factura_guardada = f"{cliente_nombre}, {factura_texto.replace(chr(10), ' | ')} | Total: ${total_costo:.2f}\n"
+            ruta = self.ruta_seleccionada.get()
+            factura_guardada = f"{cliente_nombre}, {factura_texto.replace(chr(10), ' | ')} | Ruta: {ruta}\n"
+
 
             with open("Resources/facturas.txt", "a", encoding="utf-8") as archivo_facturas:
                 archivo_facturas.write(factura_guardada)
