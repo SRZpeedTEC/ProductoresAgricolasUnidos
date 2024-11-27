@@ -41,7 +41,7 @@ class AgregarNuevoProducto:
             elif len(ent_codigo.get()) > 10:
                 messagebox.showerror("Error", "El código no puede tener más de 10 caracteres")
             else:
-                if ManipulacionRegistros.agregar_registro(ent_codigo.get(), ent_descripcion.get(), 0.0, ent_unidad.get(), tree):           
+                if ManipulacionRegistros.agregar_registro(ent_codigo.get(), ent_descripcion.get(), 0.0, ent_unidad.get(), tree):                            
                     messagebox.showinfo("Exito", "Producto agregado correctamente")
                     ventana_agregar.destroy()
                 else:

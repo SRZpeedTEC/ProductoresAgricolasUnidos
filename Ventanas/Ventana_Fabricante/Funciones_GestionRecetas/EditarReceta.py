@@ -22,6 +22,7 @@ class EditarReceta:
         self.ingredientes_tree = None
         self.codigo_entry = None
         self.cantidad_entry = None
+        self.guardar_cambios_callback = None
 
         self._crear_ventana_editar()
 
@@ -93,29 +94,65 @@ class EditarReceta:
 
         # Botón para guardar cambios
         Button(self.ventana_editar, text="Guardar Cambios", command=self.guardar_cambios, bg="#007bff", fg="#ffffff", font=("Arial", 12, "bold")).grid(row=12, column=1, padx=10, pady=20)
+        
+        self.materia_prima = self._leer_materia_prima()
+
+        # Crear un diccionario para mapear código a nombre
+        self.codigo_a_nombre = {codigo: nombre for codigo, nombre in self.materia_prima}
+
+        
+
+        # Combobox para seleccionar el ingrediente
+        self.codigo_combobox = ttk.Combobox(self.ventana_editar, width=27, state="readonly", font=("Arial", 11))
+        self.codigo_combobox["values"] = [f"{codigo} - {nombre}" for codigo, nombre in self.materia_prima]
+        self.codigo_combobox.grid(row=9, column=1, padx=10, pady=5)
+
+        Label(self.ventana_editar, text="Cantidad:", bg="#f0f0f5", font=("Arial", 12, "bold")).grid(row=10, column=0, padx=10, pady=5, sticky="w")
+        self.cantidad_entry = Entry(self.ventana_editar, width=20, bg="#ffffff", fg="#000000", font=("Arial", 11))
+        self.cantidad_entry.grid(row=10, column=1, padx=10, pady=5)
+
+        # Botón para agregar ingrediente
+        Button(self.ventana_editar, text="Agregar/Actualizar Ingrediente", command=self.agregar_ingrediente, bg="#28a745", fg="#ffffff", font=("Arial", 11, "bold")).grid(row=11, column=0, padx=10, pady=10)
 
     def agregar_ingrediente(self):
         """
-        Agrega un nuevo ingrediente al Treeview.
+        Agrega un nuevo ingrediente al Treeview o actualiza la cantidad si ya existe.
         """
-        codigo = self.codigo_entry.get().strip()
+        seleccionado = self.codigo_combobox.get()
         cantidad = self.cantidad_entry.get().strip()
 
-        if not codigo or not cantidad:
-            messagebox.showwarning("Advertencia", "Por favor, ingresa tanto el código como la cantidad del ingrediente.")
+        if not seleccionado or not cantidad:
+            messagebox.showwarning("Advertencia", "Por favor, selecciona un ingrediente y proporciona la cantidad.")
             return
 
         try:
             # Verificar que la cantidad sea numérica
-            float(cantidad)
+            cantidad_float = float(cantidad)
         except ValueError:
             messagebox.showwarning("Advertencia", "Por favor, ingresa una cantidad válida (número).")
             return
 
-        # Insertar el nuevo ingrediente en el Treeview
-        self.ingredientes_tree.insert("", "end", values=(codigo, cantidad))
-        self.codigo_entry.delete(0, END)
+        # Obtener el código del ingrediente seleccionado
+        codigo = seleccionado.split(" - ")[0]
+
+        # Verificar si el ingrediente ya existe en el Treeview
+        existe = False
+        for item in self.ingredientes_tree.get_children():
+            valores = self.ingredientes_tree.item(item)["values"]
+            if valores[0] == codigo:
+                # Actualizar la cantidad
+                self.ingredientes_tree.item(item, values=(codigo, cantidad))
+                existe = True
+                break
+
+        if not existe:
+            # Insertar el nuevo ingrediente en el Treeview
+            self.ingredientes_tree.insert("", "end", values=(codigo, cantidad))
+
+        # Limpiar las entradas
+        self.codigo_combobox.set("")
         self.cantidad_entry.delete(0, END)
+
 
     def eliminar_ingrediente(self):
         """
@@ -172,5 +209,25 @@ class EditarReceta:
             messagebox.showinfo("Éxito", "Receta actualizada con éxito.")
             self.ventana_editar.destroy()
 
+            if self.guardar_cambios_callback:
+                self.guardar_cambios_callback()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar los cambios: {e}")
+    
+    def _leer_materia_prima(self):
+        
+        path_materia_prima = "Resources/txt_informacion_productos/materia_prima_fabrica.txt"
+        materia_prima = []
+        try:
+            with open(path_materia_prima, "r") as file:
+                for linea in file:
+                    partes = linea.strip().split("|")
+                    if len(partes) >= 2:
+                        codigo = partes[0].strip()
+                        nombre = partes[1].strip()
+                        materia_prima.append((codigo, nombre))
+            return materia_prima
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo leer la materia prima: {e}")
+            return []
+

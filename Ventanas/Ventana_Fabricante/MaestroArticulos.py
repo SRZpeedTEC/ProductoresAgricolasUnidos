@@ -52,7 +52,7 @@ class GestionMateriaPrima:
            
 
     def agregar_materiaPrima(self):
-        self.productos = ManipulacionTXT.leer_materia_prima()
+        self.actualizar_materiaPrimaTXT()
         self.AgregarMateriaPrima.agregar_materia_prima(self.tree)
           
     def editar_materiaPrima(self):
@@ -66,6 +66,10 @@ class GestionMateriaPrima:
 
     def actualizar_materiaPrima(self):
         ManipulacionRegistros.cargar_materia_prima(self.tree)
+        
+    def actualizar_materiaPrimaTXT(self):
+        productos = ManipulacionTXT.leer_materia_prima()
+        self.AgregarMateriaPrima = AgregarMateriaPrima.AgregarMateriaPrima(productos)
             
         
        

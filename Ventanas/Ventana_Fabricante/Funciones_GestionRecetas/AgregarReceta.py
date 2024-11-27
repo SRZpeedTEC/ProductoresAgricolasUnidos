@@ -4,7 +4,7 @@ from tkinter import messagebox
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.Manipulacion_txt import ManipulacionTXT
 from Ventanas.Ventana_Fabricante.Manipulacion_txt.ManipulacionRecetasTXT import ManipulacionRecetasTXT
 
-def agregar_receta(self):
+def agregar_receta(self, callback):
     # Crear una nueva ventana para agregar recetas
     ventana_receta = Toplevel()
     ventana_receta.title("Agregar Receta")
@@ -175,6 +175,7 @@ def agregar_receta(self):
             )
             messagebox.showinfo("Éxito", "Receta guardada correctamente.")
             ventana_receta.destroy()
+            callback()
         except ValueError as e:
             messagebox.showerror("Error al guardar receta", f"{e}")
         except Exception as e:

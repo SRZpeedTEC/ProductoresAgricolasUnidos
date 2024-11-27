@@ -75,8 +75,8 @@ class GestionRecetas:
 
 
     def agregar_receta(self):
-        agregar_receta(self)
-        self.actualizar_recetas()
+        agregar_receta(self, self.actualizar_recetas)
+        
 
     def editar_receta(self):
         """
@@ -108,7 +108,7 @@ class GestionRecetas:
 
             # Abrir ventana para editar la receta
             
-            editar_receta_window = EditarReceta(self.path_recetas, receta_encontrada, self.tree)    
+            editar_receta_window = EditarReceta(self.path_recetas, receta_encontrada, self.tree)
             editar_receta_window.guardar_cambios_callback = self.actualizar_recetas
 
         except Exception as e:
