@@ -22,6 +22,7 @@ class EditarReceta:
         self.ingredientes_tree = None
         self.codigo_entry = None
         self.cantidad_entry = None
+        self.guardar_cambios_callback = None
 
         self._crear_ventana_editar()
 
@@ -208,6 +209,8 @@ class EditarReceta:
             messagebox.showinfo("Éxito", "Receta actualizada con éxito.")
             self.ventana_editar.destroy()
 
+            if self.guardar_cambios_callback:
+                self.guardar_cambios_callback()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar los cambios: {e}")
     

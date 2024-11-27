@@ -1,3 +1,3 @@
-Salsa Tomate 400g|Salsa Deliciosa|10|1|Litros|./Resources/Imgs/logoProvisional.png|Tomate
-Agua|Agua Fresca|2|9|Litros|./Resources/Imgs/logoProvisional.png|Otros
+Salsa Tomate 400g|Salsa Deliciosa|10|1.0|Litros|./Resources/Imgs/logoProvisional.png|Tomate
+Agua|Agua Fresca|2|6.0|Litros|./Resources/Imgs/logoProvisional.png|Otros
 Lata Tomate|Lata Tomate|50|2|Unidad|C:/Users/XPC/Desktop/Avion.png|Salsas
